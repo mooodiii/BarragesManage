@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogIn</title>
+    <link rel="stylesheet" href="{% static 'barage/index.css' %}">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let email = document.getElementById('email');
+            let password = document.getElementById('password');
+            let email_feedback = document.getElementById('email-feedback');
+            let password_feedback = document.getElementById('password-feedback');
+
+            email.onchange = () => {
+                if (email.value == "") {
+                    email_feedback.innerHTML = "Required"
+                } else if (!isValidEmail(email.value)) {
+                    email_feedback.innerHTML = "Email doit etre valide";
+                } else {
+                    email_feedback.innerHTML = ""
+                }
+            }
+
+            password.onchange = () => {
+                if (password.value === "") {
+                    password_feedback.innerHTML = "Required"
+                } else {
+                    password_feedback.innerHTML = ""
+                }
+            }
+
+            function isValidEmail(email) {
+                return /^([^0-9])[^ ]+@([^0-9])[^ ]+\.(ma|com)$/.test(email);
+            }
+        })
+    </script>
+</head>
+
+<body>
+
+
+    <div class="App">
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <img src={% static 'barage/images/logo.png' %} width="250" /> {% if message %}
+            <div id="message">{{ message }}</div>
+            {% endif %}
+            <label for="email">Email</label>
+            <input name="email" id="email" type="email" placeholder="Enter your email" />
+            <div id="email-feedback"></div>
+
+            <label for="email">Password</label>
+            <input name="password" id="password" type="password" placeholder="Enter your password" />
+            <div id="password-feedback"></div>
+            <input type="submit" id="submiiit" value="Log in">
+            </input>
+        </form>
+    </div>
+
+</body>
+
+</html>

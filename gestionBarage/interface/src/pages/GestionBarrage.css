@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#CalculApp {
+    text-align: left;
+    margin-left: 20%;
+    margin-top: 5%;
+    font-size: 22px;
+    border: solid rgb(221, 221, 221) 5px;
+    border-radius: 20px;
+    width: 800px;
+    padding-left: 10%;
+    padding-top: 2%;
+}
+
+.baragList {
+    font-size: 20px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+#baragList {
+    margin-left: 15%;
+}
+
+#freq {
+    margin-left: 12%;
+}
+
+#start {
+    margin-left: 6.9%;
+}
+
+#end {
+    margin-left: 11.8%;
+}
+
+#CalculApp div {
+    padding: 2%;
+}
+
+button,
+#calculer,
+#convert {
+    font-size: 20px;
+    margin-right: 5%;
+    padding: 10px;
+    border-radius: 15px;
+    border: transparent;
+}
+
+button:hover {
+    transform: scale(1.1);
+    cursor: pointer
+}
+
+#calculer:hover {
+    transform: scale(1.1);
+    cursor: pointer
+}
+
+#convert:hover {
+    transform: scale(1.1);
+    cursor: pointer
+}
+
+#resulta {
+    margin-left: 14.9%;
+}
+
+#input {
+    margin-left: 5%;
+}
+
+#sheet {
+    margin-left: 6%;
+}
+
+#month {
+    margin-left: 9%;
+}
+
+.btn {
+    margin: 1%
+}
+
+.chart {
+    width: 70%;
+}

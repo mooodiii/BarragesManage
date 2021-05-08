@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+mysqlclient = "*"
+pandas = "*"
+djangorestframework = "*"
+django-filter = "*"
+sqlparse = "*"
+webpack = "*"
+xlrd = "*"
+openpyxl = "*"
+et-xmlfile = "*"
+django-admin = "*"
+numpy = "*"
+django-cors-headers = "*"
+django-webpack-loader = "*"
+xlwt = "*"
+weasyprint = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

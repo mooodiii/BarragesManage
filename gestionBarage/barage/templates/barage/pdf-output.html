@@ -1,0 +1,168 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Output</title>
+
+    <style>
+        @page {
+            size: "A4";
+            margin: 1.5cm 1cm;
+            @top-center {
+                content: "Agence du Bassin Hydraulique de l'Oum Er Rbia";
+            }
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+        
+        .image {
+            margin: 0;
+            text-align: center;
+        }
+        
+        img {
+            margin: 0;
+            width: 200px;
+        }
+        
+        table {
+            margin: 0 auto;
+            width: 80%;
+            font-size: 11px;
+        }
+        
+        table th {
+            padding: 5px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 1px 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="image">
+        <img src="https://i.ibb.co/G7FqHNm/logo.png" alt="logo">
+    </div>
+    <div>
+        <h4>Fournitures d'eau d'irrigation réalisées au cours  de l'année {{periode}}</h4>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th colSpan="2">Barrage</th>
+                <th>Sep</th>
+                <th>Oct</th>
+                <th>Nov</th>
+                <th>Dec</th>
+                <th>Jan</th>
+                <th>Feb</th>
+                <th>Mar</th>
+                <th>Apr</th>
+                <th>May</th>
+                <th>Jun</th>
+                <th>Jul</th>
+                <th>Aug</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% load l10n %} {% for item in suiviBilan%}
+            <tr className='massira'>
+                <td>{{item.barage}}</td>
+                <td>{{item.suivi}}</td>
+                <td>{{item.oct | floatformat:"1"}}</td>
+                <td>{{item.nov | floatformat:"1"}}</td>
+                <td>{{item.sep | floatformat:"1"}}</td>
+                <td>{{item.dec | floatformat:"1"}}</td>
+                <td>{{item.jan | floatformat:"1"}}</td>
+                <td>{{item.feb | floatformat:"1"}}</td>
+                <td>{{item.mar | floatformat:"1"}}</td>
+                <td>{{item.apr | floatformat:"1"}}</td>
+                <td>{{item.may | floatformat:"1"}}</td>
+                <td>{{item.jun | floatformat:"1"}}</td>
+                <td>{{item.jul | floatformat:"1" }}</td>
+                <td>{{item.aug | floatformat:"1"}}</td>
+                <td>{{item.total | floatformat:"1"}}</td>
+            </tr>
+            {% endfor %}
+            {% load l10n %} {% for item in transfert%}
+            <tr className='massira'>
+                <td colSpan="2">{{item.suivi}}</td>
+                <td>{{item.sep | floatformat:"1"}}</td>
+                <td>{{item.oct | floatformat:"1"}}</td>
+                <td>{{item.nov | floatformat:"1"}}</td>
+                <td>{{item.dec | floatformat:"1"}}</td>
+                <td>{{item.jan | floatformat:"1"}}</td>
+                <td>{{item.feb | floatformat:"1"}}</td>
+                <td>{{item.mar | floatformat:"1"}}</td>
+                <td>{{item.apr | floatformat:"1"}}</td>
+                <td>{{item.may | floatformat:"1"}}</td>
+                <td>{{item.jun | floatformat:"1"}}</td>
+                <td>{{item.jul | floatformat:"1" }}</td>
+                <td>{{item.aug | floatformat:"1"}}</td>
+                <td>{{item.total | floatformat:"1"}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top: 20%; text-align: center">
+        <h4>Apports d'eau enregitrés au cours de l'année {{periode}}</h4>
+    </div>
+    <table >
+        <thead>
+            <tr>
+                <th colSpan="2">Barrage</th>
+                <th>Sep</th>
+                <th>Oct</th>
+                <th>Nov</th>
+                <th>Dec</th>
+                <th>Jan</th>
+                <th>Feb</th>
+                <th>Mar</th>
+                <th>Apr</th>
+                <th>May</th>
+                <th>Jun</th>
+                <th>Jul</th>
+                <th>Aug</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% load l10n %} {% for item in apport%}
+            <tr className='massira'>
+                <td colSpan="2">{{item.barage}}</td>
+                <td>{{item.sep | floatformat:"1"}}</td>
+                <td>{{item.oct | floatformat:"1"}}</td>
+                <td>{{item.nov | floatformat:"1"}}</td>
+                <td>{{item.dec | floatformat:"1"}}</td>
+                <td>{{item.jan | floatformat:"1"}}</td>
+                <td>{{item.feb | floatformat:"1"}}</td>
+                <td>{{item.mar | floatformat:"1"}}</td>
+                <td>{{item.apr | floatformat:"1"}}</td>
+                <td>{{item.may | floatformat:"1"}}</td>
+                <td>{{item.jun | floatformat:"1"}}</td>
+                <td>{{item.jul | floatformat:"1" }}</td>
+                <td>{{item.aug | floatformat:"1"}}</td>
+                <td>{{item.total | floatformat:"1"}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+</body>
+
+</html>
