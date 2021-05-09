@@ -239,6 +239,24 @@ class MyYoussefBilanHydr(AbstractBilanHydr):
     one = models.FloatField()
     vf = models.FloatField()
 
+
+class TiminoutineBilanHydr(models.Model):
+    annee = models.IntegerField()
+    mois = models.IntegerField()
+    jour = models.IntegerField()
+    cote = models.FloatField()
+    reserve = models.FloatField()
+    varReserve = models.FloatField()
+    evaporation = models.FloatField()
+    vidange = models.FloatField()
+    deverse = models.FloatField()
+    v1 = models.FloatField()
+    v2 = models.FloatField()
+    soltania = models.FloatField()
+    total = models.FloatField()
+    volumeApp = models.FloatField()
+    debitApp = models.FloatField()
+
 class AelHanssaliBilanHydr(AbstractBilanHydr):
     volumeTurbine = models.FloatField()
     vsd = models.FloatField()

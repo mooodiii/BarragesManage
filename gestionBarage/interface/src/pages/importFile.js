@@ -71,7 +71,7 @@ class Fichier extends React.Component  {
             })}
     </ul>
     <div id="CalculApp">
-      <form action="/APIs/file" method="POST" enctype="multipart/form-data">
+      <form action="http://127.0.0.1:8000/APIs/file" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="csrfmiddlewaretoken" value={this.state.csrf}></input>
       <div>
         <label htmlFor="input">Selectionner un fichier:</label>

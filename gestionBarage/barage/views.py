@@ -152,15 +152,8 @@ def file(request):
         if isLeapYear(date.today().year):
             dataMonth[2] = 29
 
-        if file == "MASSIRA.xlsx":
-            pdx = pdx.drop(columns=['Unnamed: 0'])
-            pdx.columns = ["Jour", "Cote", "Reserve", "Variation Reserve",
-                           "Evaporation", "Fuites", "ONE", "ONEP1", "ONEP2", "Vid.Fond",
-                           "Evac. crue", "Total", "App. Volume", "App. Debit"]
-            pdx = pdx.loc[(pdx['Jour'].isnull() == False) & (
-                pdx['Jour'].str.isalpha() != False) & (pdx['Jour'].str.isalpha() != True)]
-            pdx = pdx.loc[(pdx['Jour'] >= 1) & (
-                pdx['Jour'] <= dataMonth[month]) & pdx['Evaporation'].isnull() == False]
+        if 'massira' in file.lower():
+            columns = pdx.columns
             title = ['BARRAGE AL MASSIRA',
                      'BILAN HYDRAULIQUE', 'MOIS DE Février 2021']
             barageCheck = MassiraBilanHydr.objects.filter(
@@ -172,20 +165,20 @@ def file(request):
                     massira = MassiraBilanHydr(
                         annee=year,
                         mois=month,
-                        jour=row['Jour'],
-                        cote=row['Cote'],
-                        reserve=row['Reserve'],
-                        varReserve=row['Variation Reserve'],
-                        evaporation=row['Evaporation'],
-                        fuite=row['Fuites'],
-                        one=row['ONE'],
-                        onep1=row['ONEP1'],
-                        onpe2=row['ONEP2'],
-                        vFond=row['Vid.Fond'],
-                        evacCrue=row['Evac. crue'],
-                        total=row['Total'],
-                        appVolume=row['App. Volume'],
-                        appDebit=row['App. Debit'],
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        varReserve=row[columns[3]],
+                        evaporation=row[columns[4]],
+                        fuite=row[columns[5]],
+                        one=row[columns[6]],
+                        onep1=row[columns[7]],
+                        onpe2=row[columns[8]],
+                        vFond=row[columns[9]],
+                        evacCrue=row[columns[10]],
+                        total=row[columns[11]],
+                        appVolume=row[columns[12]],
+                        appDebit=row[columns[13]],
                     )
                     massira.save()
 
@@ -194,38 +187,31 @@ def file(request):
             else:
                 return Response({"error": "existe deja"})
 
-        elif file == "HANSALI.xlsx":
-            pdx = pdx.iloc[:, 0:14]
-            pdx = pdx.drop(columns=['Unnamed: 0'])
-            pdx.columns = ["Jour", "Cote", "Reserve", "Variation Reserve", "Evaporation", "Fuites",
-                           "V. Turbine", "V.S.D", "V.S.G", "V. DEVERSE", "Total", "App. Volume", "App. Debit"]
-            pdx = pdx.loc[(pdx['Jour'].isnull() == False) & (
-                pdx['Jour'].str.isalpha() != False) & (pdx['Jour'].str.isalpha() != True)]
-            pdx = pdx.loc[(pdx['Jour'] >= 1) & (
-                pdx['Jour'] <= dataMonth[month]) & pdx['Evaporation'].isnull() == False]
+        elif 'hansali' in file.lower():
+            columns = pdx.columns
             barageCheck = AelHanssaliBilanHydr.objects.filter(
                 mois=month, annee=annee)
             if len(barageCheck) < 1:
-                pdx['Fuites'] = pdx['Fuites'].fillna(0)
+                pdx = pdx.fillna(value=0)
                 upload = BarageUploaded.objects.all()
                 upload.delete()
                 for index, row in pdx.iterrows():
                     hanssali = AelHanssaliBilanHydr(
                         annee=year,
                         mois=month,
-                        jour=row['Jour'],
-                        cote=row['Cote'],
-                        reserve=row['Reserve'],
-                        varReserve=row['Variation Reserve'],
-                        evaporation=row['Evaporation'],
-                        fuite=row['Fuites'],
-                        volumeTurbine=row['V. Turbine'],
-                        vsd=row['V.S.D'],
-                        vsg=row['V.S.G'],
-                        vDesverse=row['V. DEVERSE'],
-                        total=row['Total'],
-                        appVolume=row['App. Volume'],
-                        appDebit=row['App. Debit'],
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        varReserve=row[columns[3]],
+                        evaporation=row[columns[4]],
+                        fuite=row[columns[5]],
+                        volumeTurbine=row[columns[6]],
+                        vsd=row[columns[7]],
+                        vsg=row[columns[8]],
+                        vDesverse=row[columns[9]],
+                        total=row[columns[10]],
+                        appVolume=row[columns[11]],
+                        appDebit=row[columns[12]],
                     )
                     hanssali.save()
                 upload = BarageUploaded(name="hansali", month=month, year=year)
@@ -233,17 +219,9 @@ def file(request):
             else:
                 return Response({"error": "existe deja"})
 
-        elif file == "AIT MESSAOUD.xls":
-            pdx = pdx.drop(columns=['Unnamed: 0', 'Unnamed: 1'])
-            pdx.columns = ['Jour', 'Cote', 'Reserve', 'taux remplissage',
-                           'Variation Reserve', 'Evap', 'fuite', 'V. Turbine',
-                           'v vidange', 'v evacue', 'total',
-                           'App. Volume', 'App. Debit', 'pluie']
+        elif 'messaoud' in file.lower():
+            columns = pdx.columns
 
-            pdx = pdx.loc[(pdx['Jour'].isnull() == False) &
-                          (pdx['Jour'].str.isalpha() != True)]
-            pdx = pdx.loc[(pdx['Jour'] >= 1) & (pdx['Jour'] <= 28) & (
-                pdx['Variation Reserve'].isnull() == False)]
             barageCheck = AitMessaoudBilanHydr.objects.filter(
                 mois=month, annee=annee)
             if len(barageCheck) < 1:
@@ -253,20 +231,20 @@ def file(request):
                     aitmessaoud = AitMessaoudBilanHydr(
                         annee=year,
                         mois=month,
-                        jour=row['Jour'],
-                        cote=row['Cote'],
-                        reserve=row['Reserve'],
-                        tauxRemplissage=row['taux remplissage'],
-                        varReserve=row['Variation Reserve'],
-                        evaporation=row['Evap'],
-                        fuite=row['fuite'],
-                        volumeTurbine=row['V. Turbine'],
-                        vVidange=row['v vidange'],
-                        vEvacue=row['v evacue'],
-                        pluie=row['pluie'],
-                        total=row['total'],
-                        appVolume=row['App. Volume'],
-                        appDebit=row['App. Debit'],
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        tauxRemplissage=row[columns[3]],
+                        varReserve=row[columns[4]],
+                        evaporation=row[columns[5]],
+                        fuite=row[columns[6]],
+                        volumeTurbine=row[columns[7]],
+                        vVidange=row[columns[8]],
+                        vEvacue=row[columns[9]],
+                        pluie=row[columns[13]],
+                        total=row[columns[10]],
+                        appVolume=row[columns[11]],
+                        appDebit=row[columns[12]],
                     )
                     aitmessaoud.save()
 
@@ -326,17 +304,8 @@ def file(request):
             else:
                 return Response({"error": "existe deja"})
 
-        elif file == "MY HASSAN 1er.xlsx":
-            pdx = pdx.drop(
-                columns=['Unnamed: 13', 'Unnamed: 14', 'Unnamed: 15', 'Unnamed: 16'])
-            pdx.columns = ['Jour', 'Cote', 'Reserve',
-                           'variation reserve', 'Evap', 'fuite', 'onep',
-                           'one', 'vid fond', 'E.Crue', 'total',
-                           'volumeApport', 'debit']
-            pdx = pdx.loc[(pdx['Jour'].isnull() == False) & (
-                pdx['Jour'].str.isalpha() != False) & (pdx['Jour'].str.isalpha() != True)]
-            pdx = pdx.loc[(pdx['Jour'] >= 1) & (pdx['Jour'] <= 28) & (
-                pdx['variation reserve'].isnull() == False)]
+        elif 'hassan' in file.lower():
+            columns = pdx.columns
             barageCheck = HassanPremBilanHydr.objects.filter(
                 mois=month, annee=annee)
             if len(barageCheck) < 1:
@@ -346,19 +315,19 @@ def file(request):
                     hassanprem = HassanPremBilanHydr(
                         annee=year,
                         mois=month,
-                        jour=row['Jour'],
-                        cote=row['Cote'],
-                        reserve=row['Reserve'],
-                        varReserve=row['variation reserve'],
-                        evaporation=row['Evap'],
-                        fuite=row['fuite'],
-                        onep=row['onep'],
-                        one=row['one'],
-                        vidFond=row['vid fond'],
-                        total=row['total'],
-                        appVolume=row['volumeApport'],
-                        appDebit=row['debit'],
-                        eCrue=row['E.Crue']
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        varReserve=row[columns[3]],
+                        evaporation=row[columns[4]],
+                        fuite=row[columns[5]],
+                        onep=row[columns[6]],
+                        one=row[columns[7]],
+                        vidFond=row[columns[8]],
+                        total=row[columns[10]],
+                        appVolume=row[columns[11]],
+                        appDebit=row[columns[12]],
+                        eCrue=row[columns[9]]
                     )
                     hassanprem.save()
                 upload = BarageUploaded(name="hassan", month=month, year=year)
@@ -366,59 +335,76 @@ def file(request):
             else:
                 return Response({"error": "existe deja"})
 
-        elif file == "MY YOUSSEF.xls":
-            if sheet == 'Feuil2':
-                pdx.columns = ['Jour', 'Cote', 'Reserve',
-                               'variation reserve', 'Evap', 'fuite',
-                               'evc', 'v', 'c', 'one', 'vf', 'total',
-                               'volumeApport', 'debit']
-                pdx = pdx.loc[(pdx['Jour'].isnull() == False) &
-                              (pdx['Jour'].str.isalpha() != True)]
-                pdx = pdx.loc[(pdx['Jour'] >= 1) & (pdx['Jour'] <= 28) & (
-                    pdx['variation reserve'].isnull() == False) & (pdx['Cote'].isnull() == False)]
-                barageCheck = MyYoussefBilanHydr.objects.filter(
-                    mois=month, annee=annee)
-                if len(barageCheck) < 1:
-                    pdx['evc'] = pdx['evc'].fillna(0)
-                    pdx['v'] = pdx['v'].fillna(0)
-                    pdx['c'] = pdx['c'].fillna(0)
-                    pdx['vf'] = pdx['vf'].fillna(0)
-                    upload = BarageUploaded.objects.all()
-                    upload.delete()
-                    for index, row in pdx.iterrows():
-                        myyoussef = MyYoussefBilanHydr(
-                            annee=year,
-                            mois=month,
-                            jour=row['Jour'],
-                            cote=row['Cote'],
-                            reserve=row['Reserve'],
-                            varReserve=row['variation reserve'],
-                            evaporation=row['Evap'],
-                            fuite=row['fuite'],
-                            evc=row['evc'],
-                            v=row['v'],
-                            c=row['c'],
-                            one=row['one'],
-                            total=row['total'],
-                            appVolume=row['volumeApport'],
-                            appDebit=row['debit'],
-                            vf=row['vf']
-                        )
-                        myyoussef.save()
-                    upload = BarageUploaded(
-                        name="myYoussef", month=month, year=year)
-                    upload.save()
-                else:
-                    return Response({"error": "existe deja"})
-
-        elif file == "SIDI DRISS.xls":
-            pdx.columns = ["jour", "cote", "reserve", "varReserve", "evaporation", "fuite",
-                           "oued", "canal", "vidFond", "Desverse", "total", "appVolume", "appDebit"]
-            pdx = pdx.loc[(pdx['jour'].isnull() == False) & (
-                pdx['jour'].str.isalpha() != False) & (pdx['jour'].str.isalpha() != True)]
-            pdx = pdx.loc[(pdx['jour'] >= 1) & (
-                pdx['jour'] <= dataMonth[month]) & pdx['evaporation'].isnull() == False]
+        elif 'youssef' in  file.lower():
+            columns = pdx.columns
+            pdx = pdx.fillna(value=0)
             barageCheck = MyYoussefBilanHydr.objects.filter(
+                mois=month, annee=annee)
+            if len(barageCheck) < 1:
+                upload = BarageUploaded.objects.all()
+                upload.delete()
+                for index, row in pdx.iterrows():
+                    myyoussef = MyYoussefBilanHydr(
+                        annee=year,
+                        mois=month,
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        varReserve=row[columns[3]],
+                        evaporation=row[columns[4]],
+                        fuite=row[columns[5]],
+                        evc=row[columns[6]],
+                        v=row[columns[7]],
+                        c=row[columns[8]],
+                        one=row[columns[9]],
+                        total=row[columns[11]],
+                        appVolume=row[columns[12]],
+                        appDebit=row[columns[13]],
+                        vf=row[columns[10]]
+                    )
+                    myyoussef.save()
+                upload = BarageUploaded(
+                    name="myYoussef", month=month, year=year)
+                upload.save()
+            else:
+                return Response({"error": "existe deja"})
+
+        elif 'timinoutine' in  file.lower():
+            columns = pdx.columns
+            pdx = pdx.fillna(value=0)
+            barageCheck = TiminoutineBilanHydr.objects.filter(
+                mois=month, annee=annee)
+            if len(barageCheck) < 1:
+                upload = BarageUploaded.objects.all()
+                upload.delete()
+                for index, row in pdx.iterrows():
+                    timinoutine = TiminoutineBilanHydr(
+                        annee=year,
+                        mois=month,
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        varReserve=row[columns[3]],
+                        evaporation=row[columns[4]],
+                        vidange=row[columns[5]],
+                        deverse=row[columns[6]],
+                        v1=row[columns[7]],
+                        v2=row[columns[8]],
+                        soltania=row[columns[9]],
+                        total=row[columns[10]],
+                        volumeApp=row[columns[11]],
+                        debitApp=row[columns[12]]
+                    )
+                    timinoutine.save()
+                upload = BarageUploaded(
+                    name="timinoutine", month=month, year=year)
+                upload.save()
+            else:
+                return Response({"error": "existe deja"})
+
+        elif 'driss' in file.lower():
+            columns = pdx.columns
+            barageCheck = SidiDrissBilanHydr.objects.filter(
                 mois=month, annee=annee)
             if len(barageCheck) < 1:
                 upload = BarageUploaded.objects.all()
@@ -427,25 +413,29 @@ def file(request):
                     sididriss = SidiDrissBilanHydr(
                         annee=year,
                         mois=month,
-                        jour=row['jour'],
-                        cote=row['cote'],
-                        reserve=row['reserve'],
-                        varReserve=row['varReserve'],
-                        evaporation=row['evaporation'],
-                        fuite=row['fuite'],
-                        oued=row['oued'],
-                        canal=row['canal'],
-                        vidFond=row['vidFond'],
-                        Desverse=row['Desverse'],
-                        total=row['total'],
-                        appVolume=row['appVolume'],
-                        appDebit=row['appDebit'],
+                        jour=row[columns[0]],
+                        cote=row[columns[1]],
+                        reserve=row[columns[2]],
+                        varReserve=row[columns[3]],
+                        evaporation=row[columns[4]],
+                        fuite=row[columns[5]],
+                        oued=row[columns[6]],
+                        canal=row[columns[7]],
+                        vidFond=row[columns[8]],
+                        Desverse=row[columns[9]],
+                        total=row[columns[10]],
+                        appVolume=row[columns[11]],
+                        appDebit=row[columns[12]],
                     )
                     sididriss.save()
                 upload = BarageUploaded(name="driss", month=month, year=year)
                 upload.save()
             else:
                 return Response({"error": "existe deja"})
+        else:
+            upload = BarageUploaded.objects.all()
+            upload.delete()
+            return HttpResponseRedirect('/Fichier/import')
 
         return HttpResponseRedirect('/Fichier/submitData')
     elif request.method == 'GET':
@@ -469,6 +459,17 @@ def file(request):
                          "fuite", "evc", "v", "c", "one", "vf", "total", "appVolume", "appDebit"]
             title = ['BARRAGE MY YOUSSEF', 'BILAN HYDRAULIQUE']
             serializer = MyYoussefBilanSerialize(barage, many=True)
+            return Response([serializer.data, title, columns, dbcolumns, name])
+        elif name == "timinoutine":
+            barage = TiminoutineBilanHydr.objects.filter(mois=month, annee=year)
+            columns = ['Jour', 'Cote', 'Reserve',
+                       'variation reserve', 'Evap', 'V.vidangé',
+                       'V.deversé', 'V1', 'V2', 'S.Soltania', 'total',
+                       'volumeApport', 'debit']
+            dbcolumns = ["jour", "cote", "reserve", "varReserve", "evaporation",
+                         "vidange", "deverse", "v1", "v2", "soltania", "total", "volumeApp", "debitApp"]
+            title = ['BARRAGE TIMINOUTINE', 'BILAN HYDRAULIQUE']
+            serializer = TiminoutineBilanSerialize(barage, many=True)
             return Response([serializer.data, title, columns, dbcolumns, name])
         elif name == "massira":
             barage = MassiraBilanHydr.objects.filter(mois=month, annee=year)
@@ -554,48 +555,32 @@ def editData(request):
             barage = data["barage"]
         if barage == "massira":
             barageL = MassiraBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-                barageL.save()
         elif barage == "myYoussef":
             barageL = MyYoussefBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-                barageL.save()
+        elif barage == "timinoutine":
+            barageL = TiminoutineBilanHydr.objects.get(id=id)
         elif barage == "hansali":
             barageL = AelHanssaliBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-                barageL.save()
         elif barage == "messouad":
             barageL = AitMessaoudBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-                barageL.save()
         elif barage == "binouidane":
             barageL = BinOuidaneBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-                barageL.save()
-
         elif barage == "hassan":
             barageL = HassanPremBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-
-                barageL.save()
         elif barage == "driss":
             barageL = SidiDrissBilanHydr.objects.get(id=id)
-            if data.get("newValue") is not None:
-                setattr(barageL, column, data['newValue'])
-                barageL.save()
         else:
             return Response({"BARAGE": "error 404"})
+        
+        if data.get("newValue") is not None:
+            setattr(barageL, column, data['newValue'])
+            barageL.save()
 
         return Response({"message": "succefully"})
 
     else:
         return Response({"GEEET": "error 404"})
+
 
 def transHansali(periode, month, column):
     bilantur=SuiviBilan.objects.filter(
@@ -628,6 +613,8 @@ def transHansali(periode, month, column):
     bilantrans.total = float(s)
     bilantrans.save()
     hanssali.save()
+
+
 def transHassanPrem(periode, month, column):
     bilantur = SuiviBilan.objects.filter(
                 periode=periode, barage="Hassan 1er", suivi="Turbinages").get()
@@ -659,6 +646,7 @@ def transHassanPrem(periode, month, column):
     bilantrans.total = float(s)
     bilantrans.save()
     hassanPrem.save()
+
 def TransBinOuidane(periode, month, column):
     bilantur = SuiviBilan.objects.filter(
                 periode=periode, barage="Bin Ouidane", suivi="Turbinages").get()
@@ -1125,7 +1113,39 @@ def calcInternMassira(periode, varData):
     setattr(bilan, "total", round(total, 1))
     bilan.save()
 
+def TransYoussef(periode, month, column):
+    bilantur = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="Turbinages").get()
+    bilanvid = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="Vid +Dév My Youssef").get()
+    bilansol = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="irrigation").get()
+    bilanirr = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="soltania").get()
+    bilantrans = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="Transfert Massira").get()
+    youssef = MyYoussefFornitures.objects.filter(
+        periode=periode, month=column.capitalize()).get()
 
+
+    tur = float(getattr(bilantur, column))
+    vid = float(getattr(bilanvid, column))
+    irr = float(getattr(bilanirr, column))
+    sol = float(getattr(bilansol, str(column)))
+
+    if int(month) >= 4 and int(month) <= 9:
+        result = round(max(0,(tur+vid-irr-sol)*0.7), 1)
+    else:
+        result = round(max(0, (tur+vid-irr-sol)*0.8), 1)
+
+    
+    setattr(bilantrans, column, result)
+    bilan = bilantrans
+    s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
+    bilantrans.total = float(s)
+    youssef.TransfertMassira = result
+    bilantrans.save()
+    youssef.save()
 
 @api_view(['GET'])
 def suiviBilan(request):
@@ -1136,7 +1156,7 @@ def suiviBilan(request):
         month = upload.month
         year = upload.year
     except:
-        return Response("noo akhoya ")
+        return Response("noo akhoya")
     dataMonth = ["", "Jan", "Fev", "Mar", "Apr", "May",
                  "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     varData = ["", "jan", "feb", "mar", "apr", "may",
@@ -1151,7 +1171,62 @@ def suiviBilan(request):
     createVarApport(periode)
 
     if name == "myYoussef":
-        barage = MyYoussefBilanHydr(mois=month)
+        check = MyYoussefFornitures.objects.filter(
+            year=year, month=dataMonth[month])
+        
+        if len(check) < 1:
+            barageY = MyYoussefBilanHydr.objects.filter(mois=month, annee=year)
+            barageT = TiminoutineBilanHydr.objects.filter(mois=month, annee=year)
+            turbinage = barageY.aggregate(Sum('one'))['one__sum']
+            apport = barageY.aggregate(Sum('appVolume'))['appVolume__sum']
+
+            v1 = barageT.aggregate(Sum('v1'))['v1__sum']
+            v2 = barageT.aggregate(Sum('v2'))['v2__sum']
+
+            vid = barageT.aggregate(Sum('vidange'))['vidange__sum']
+            dev = barageT.aggregate(Sum('deverse'))['deverse__sum']
+
+            irrigation = float(v1) + float(v2)
+            vidPdev = float(vid) + float(dev)
+            soltania = barageT.aggregate(Sum('soltania'))['soltania__sum']
+
+            myYoussef = MyYoussefFornitures(
+                periode=periode,
+                month=dataMonth[month],
+                turbinage = turbinage,
+                irrigation = irrigation,
+                soltania = soltania,
+                vidPdev = vidPdev,
+                TransfertMassira = 0,
+                year=year,
+                aport = apport,
+            )
+            myYoussef.save()
+
+            bilantur = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="Turbinages").get()
+            bilanvid = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="Vid +Dév My Youssef").get()
+            bilansol = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="irrigation").get()
+            bilanirr = SuiviBilan.objects.filter(
+                periode=periode, barage="My Youssef", suivi="soltania").get()
+
+
+            enterVarApport(periode, "My Youssef", varData[month], apport)
+            calcInternMassira(periode, varData[month])
+
+            setattr(bilantur, dataMonth[month], turbinage)
+            setattr(bilanvid, dataMonth[month], vidPdev)
+            setattr(bilansol, dataMonth[month], soltania)
+            setattr(bilanirr, dataMonth[month], irrigation)
+
+            bilantur.save()
+            bilanvid.save()
+            bilansol.save()
+            bilanirr.save()
+            TransYoussef(periode, month, column)
+
     elif name == "binouidane":
         check = BinOuidaneFornitures.objects.filter(
             year=year, month=dataMonth[month])
@@ -1188,7 +1263,7 @@ def suiviBilan(request):
             setattr(bilanvid, dataMonth[month], vidPdiv)
             bilantur.save()
             bilanvid.save()
-
+            TransYoussef(periode, month, column)
             TransBinOuidane(periode, month)
 
     elif name == "hassan":

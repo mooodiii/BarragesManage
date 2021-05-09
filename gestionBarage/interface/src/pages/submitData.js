@@ -130,7 +130,12 @@ class submitData extends React.Component  {
                 return (
                   <td><input className="numbers" type="number" id={item["id"]} name={element} defaultValue={item[element]} onBlur={this.handleChangeValues}></input></td>
                 )
-              }else{
+              }
+              else if (element === 'fuite'){
+                return (
+                  <td><input className="numbers" type="number" id={item["id"]} name={element} defaultValue={item[element]} onBlur={this.handleChangeValues}></input></td>
+                )}
+              else{
                 return (
                   <td><input className="numbers" type="number" id={item["id"]} name={element} defaultValue={item[element].toFixed(3)} onBlur={this.handleChangeValues}></input></td>
                 )

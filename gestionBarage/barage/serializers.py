@@ -165,6 +165,10 @@ class MassiraBilanSerialize(serializers.ModelSerializer):
         model = MassiraBilanHydr
         fields = '__all__'
 
+class TiminoutineBilanSerialize(serializers.ModelSerializer):
+    class Meta:
+        model = TiminoutineBilanHydr
+        fields = '__all__'
 
 
 
