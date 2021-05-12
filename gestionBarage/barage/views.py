@@ -254,7 +254,7 @@ def file(request):
             else:
                 return Response({"error": "existe deja"})
 
-        elif file == "BIN EL OUIDANE.xls":
+        elif 'ouidane' in file.lower():
             if isLeapYear(int(sheet)):
                 dataMonth[2] = 29
             pdx.columns = ['Mois', 'Jour', 'Cote', 'Reserve',
@@ -263,12 +263,12 @@ def file(request):
             pdx = pdx.loc[(pdx['Jour'].isnull() == False) &
                           (pdx['Jour'].str.isalpha() != True)]
             i = 1
-            m = month
+            m = 1
             for index, row in pdx.iterrows():
                 if m > 12:
                     break
                 row['Mois'] = m
-                if dataMonth[month] == i:
+                if dataMonth[m] == i:
                     i = 1
                     m += 1
                 else:
@@ -540,7 +540,7 @@ def file(request):
             serializer = SidiDrissBilanSerialize(barage, many=True)
             return Response([serializer.data, title, columns, dbcolumns, name])
         return Response({"error": "error 404"})
-    return HttpResponseRedirect('http://localhost:3000/Fichier/import')
+    return HttpResponseRedirect('/Fichier/import')
 
 
 @api_view(['GET', 'PUT'])
@@ -586,15 +586,15 @@ def transHansali(periode, month, column):
     bilantur=SuiviBilan.objects.filter(
                 periode = periode, barage = "A.E.Hansali", suivi = "Turbinages").get()
     bilanvid=SuiviBilan.objects.filter(
-                periode = periode, barage = "A.E.Hansali", suivi = "Vidanges +Déversés ").get()
+                periode = periode, barage = "A.E.Hansali", suivi = "Vidanges +Déversés").get()
     bilanirr=SuiviBilan.objects.filter(
                 periode = periode, barage = "Aït Messaoud", suivi = "irrigation").get()
     bilanvaepi=SuiviBilan.objects.filter(
                 periode = periode, barage = "Aït Messaoud", suivi = "AEPI").get()
     bilantrans = SuiviBilan.objects.filter(
                 periode=periode, barage="A.E.Hansali", suivi="Transfert Massira").get()
-    hanssali = AelHanssaliFornitures.objects.filter(
-                periode=periode, month=column.capitalize()).get()
+    
+    
 
     tur = float(getattr(bilantur, column))
     vid = float(getattr(bilanvid, column))
@@ -607,14 +607,18 @@ def transHansali(periode, month, column):
         result = round(max(0,(tur+vid-((irr+aepi)/0.8))*0.8), 1)
         
     setattr(bilantrans, column, result)
-    hanssali.TransfertMassira=result
+    try:
+        hanssali = AelHanssaliFornitures.objects.filter(
+                periode=periode, month=column.capitalize()).get()
+        hanssali.TransfertMassira=result
+        hanssali.save()
+    except:
+        pass
     bilan = bilantrans
     s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
     bilantrans.total = float(s)
     bilantrans.save()
-    hanssali.save()
-
-
+    
 def transHassanPrem(periode, month, column):
     bilantur = SuiviBilan.objects.filter(
                 periode=periode, barage="Hassan 1er", suivi="Turbinages").get()
@@ -626,8 +630,7 @@ def transHassanPrem(periode, month, column):
                 periode=periode, barage="Sidi Driss", suivi="PMH").get()
     bilantrans = SuiviBilan.objects.filter(
                 periode=periode, barage="Hassan 1er", suivi="Transfert Massira").get()
-    hassanPrem = HassanPremFornitures.objects.filter(
-                periode=periode, month=column.capitalize()).get()
+    
 
     tur = float(getattr(bilantur, column))
     vid = float(getattr(bilanvid, column))
@@ -637,15 +640,21 @@ def transHassanPrem(periode, month, column):
     if int(month) >= 4 and int(month) <= 9:
         result = round(max(0, (tur + vid - ((canal + pmh)/0.95))*0.7), 1)
     else:
-        result = round(max(0, (tur + vid - canal - pmh)*0.8))
+        result = round(max(0, (tur + vid - canal - pmh)*0.8), 1)
 
     setattr(bilantrans, column, result)
-    hassanPrem.TransfertMassira=result
+    try:
+        hassanPrem = HassanPremFornitures.objects.filter(
+                    periode=periode, month=column.capitalize()).get()
+        hassanPrem.TransfertMassira=result
+        hassanPrem.save()
+    except:
+        pass
     bilan = bilantrans
     s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
     bilantrans.total = float(s)
     bilantrans.save()
-    hassanPrem.save()
+    
 
 def TransBinOuidane(periode, month, column):
     bilantur = SuiviBilan.objects.filter(
@@ -658,8 +667,7 @@ def TransBinOuidane(periode, month, column):
                 periode=periode, barage="Bin Ouidane", suivi="AEPI Béni Méllal").get()
     bilantrans = SuiviBilan.objects.filter(
                 periode=periode, barage="Bin Ouidane", suivi="Transfert Massira").get()
-    binOuidane = BinOuidaneFornitures.objects.filter(
-        periode=periode, month=column.capitalize()).get()
+    
 
 
     tur = float(getattr(bilantur, column))
@@ -677,9 +685,15 @@ def TransBinOuidane(periode, month, column):
     bilan = bilantrans
     s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
     bilantrans.total = float(s)
-    binOuidane.TransfertMassira = result
+    try:
+        binOuidane = BinOuidaneFornitures.objects.filter(
+            periode=periode, month=column.capitalize()).get()
+        binOuidane.TransfertMassira = result
+        binOuidane.save()
+    except:
+        pass
     bilantrans.save()
-    binOuidane.save()
+    
 
 def createSuiviBilan(periode) :
 
@@ -1124,8 +1138,7 @@ def TransYoussef(periode, month, column):
                 periode=periode, barage="My Youssef", suivi="soltania").get()
     bilantrans = SuiviBilan.objects.filter(
                 periode=periode, barage="My Youssef", suivi="Transfert Massira").get()
-    youssef = MyYoussefFornitures.objects.filter(
-        periode=periode, month=column.capitalize()).get()
+
 
 
     tur = float(getattr(bilantur, column))
@@ -1143,10 +1156,73 @@ def TransYoussef(periode, month, column):
     bilan = bilantrans
     s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
     bilantrans.total = float(s)
-    youssef.TransfertMassira = result
+    try:
+        youssef = MyYoussefFornitures.objects.filter(
+        periode=periode, month=column.capitalize()).get()
+        youssef.TransfertMassira = result
+        youssef.save()
+    except:
+        pass
     bilantrans.save()
-    youssef.save()
+    
 
+def totalAepiTrans(periode, dataMonth, i):
+    print('wa wellah hta dkhel yhsseb')
+    #total aerpi almassira
+    imfoutAep=SuiviBilan.objects.filter(
+                    periode = periode, barage = "Imfout", suivi = "AEP S.Bennour+K.Zemamra").get()
+    massiraRhamna=SuiviBilan.objects.filter(
+                    periode = periode, barage = "Al Massira", suivi = "AEPI Rhamna").get()
+    massiraKech=SuiviBilan.objects.filter(
+                    periode = periode, barage = "Al Massira", suivi = "AEPI Marrakech").get()
+    daourateAep=SuiviBilan.objects.filter(
+                    periode = periode, barage = "Daourate", suivi = "AEP").get()
+    maachoAep=SuiviBilan.objects.filter(
+                    periode = periode, barage = "S.S.Mâachou", suivi = "AEP").get()
+    daouiAep=SuiviBilan.objects.filter(
+                    periode = periode, barage = "Sidi Daoui", suivi = "AEP Azemmour").get()
+    digueAepi=SuiviBilan.objects.filter(
+                    periode = periode, barage = "Digue Safi", suivi = "AEPI").get()
+
+    #total transfert al massira
+    binOuidaneTrans = SuiviBilan.objects.filter(
+                    periode=periode, barage="Bin Ouidane", suivi="Transfert Massira").get()
+    hassanTrans = SuiviBilan.objects.filter(
+                    periode=periode, barage="Hassan 1er", suivi="Transfert Massira").get()
+    youssefTrans = SuiviBilan.objects.filter(
+                    periode=periode, barage="My Youssef", suivi="Transfert Massira").get()
+    hansaliTrans = SuiviBilan.objects.filter(
+                    periode=periode, barage="A.E.Hansali", suivi="Transfert Massira").get()
+
+    
+    totalTrans = TransfertMassira.objects.filter(periode= periode, suivi="Total Transfert vers Massira").get()
+    totalAepi = TransfertMassira.objects.filter(periode= periode, suivi="Total AEPI Al Massira").get()
+
+    val1 = float(getattr(imfoutAep, dataMonth[i]))
+    val2 = float(getattr(massiraRhamna, dataMonth[i]))
+    val3 = float(getattr(massiraKech, dataMonth[i]))
+    val4 = float(getattr(daourateAep, dataMonth[i]))
+    val5 = float(getattr(maachoAep, dataMonth[i]))
+    val6 = float(getattr(daouiAep, dataMonth[i]))
+    val7 = float(getattr(digueAepi, dataMonth[i]))
+    resultAepi = val1 + val2 + val3 + val4 + val5 + val6 + val7
+
+    setattr(totalAepi, dataMonth[i], resultAepi)
+
+    val1 = float(getattr(binOuidaneTrans, dataMonth[i]))
+    val2 = float(getattr(hassanTrans, dataMonth[i]))
+    val3 = float(getattr(youssefTrans, dataMonth[i]))
+    val4 = float(getattr(hansaliTrans, dataMonth[i]))
+    resultTrans = val1 + val2 + val3 + val4
+    setattr(totalTrans, dataMonth[i], resultTrans)
+    totalTrans.save()
+    totalAepi.save()
+
+
+
+
+
+        
 @api_view(['GET'])
 def suiviBilan(request):
     try:
@@ -1157,7 +1233,7 @@ def suiviBilan(request):
         year = upload.year
     except:
         return Response("noo akhoya")
-    dataMonth = ["", "Jan", "Fev", "Mar", "Apr", "May",
+    dataMonth = ["", "Jan", "Feb", "Mar", "Apr", "May",
                  "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     varData = ["", "jan", "feb", "mar", "apr", "may",
                  "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
@@ -1170,62 +1246,72 @@ def suiviBilan(request):
     createSuiviBilan(periode)
     createVarApport(periode)
 
-    if name == "myYoussef":
+    if name == "myYoussef" or name == "timinoutine":
+        print("dkhelttttttttttttttt")
         check = MyYoussefFornitures.objects.filter(
-            year=year, month=dataMonth[month])
+            year=year, month=varData[month])
         
         if len(check) < 1:
             barageY = MyYoussefBilanHydr.objects.filter(mois=month, annee=year)
+            print("hada dyal barageYousef", str(len(barageY)))
+            
             barageT = TiminoutineBilanHydr.objects.filter(mois=month, annee=year)
-            turbinage = barageY.aggregate(Sum('one'))['one__sum']
-            apport = barageY.aggregate(Sum('appVolume'))['appVolume__sum']
+            print("hada dyal baragetIMOUTINE", str(len(barageT)))
+            if len(barageY) < 1 or len(barageT) < 1:
+                print('dkhellllll akhoya ')
+                return Response({'redirect': True})
+            else:
+                print('madahach f if')
+                turbinage = barageY.aggregate(Sum('one'))['one__sum']
+                apport = barageY.aggregate(Sum('appVolume'))['appVolume__sum']
+                v1 = barageT.aggregate(Sum('v1'))['v1__sum']
+                v2 = barageT.aggregate(Sum('v2'))['v2__sum']
 
-            v1 = barageT.aggregate(Sum('v1'))['v1__sum']
-            v2 = barageT.aggregate(Sum('v2'))['v2__sum']
+                vid = barageT.aggregate(Sum('vidange'))['vidange__sum']
+                dev = barageT.aggregate(Sum('deverse'))['deverse__sum']
 
-            vid = barageT.aggregate(Sum('vidange'))['vidange__sum']
-            dev = barageT.aggregate(Sum('deverse'))['deverse__sum']
+                irrigation = float(v1) + float(v2)
+                vidPdev = float(vid) + float(dev)
+                soltania = barageT.aggregate(Sum('soltania'))['soltania__sum']
 
-            irrigation = float(v1) + float(v2)
-            vidPdev = float(vid) + float(dev)
-            soltania = barageT.aggregate(Sum('soltania'))['soltania__sum']
+                myYoussef = MyYoussefFornitures(
+                    periode=periode,
+                    month=dataMonth[month],
+                    turbinage = turbinage,
+                    irrigation = irrigation,
+                    soltania = soltania,
+                    vidPdev = vidPdev,
+                    TransfertMassira = 0,
+                    year=year,
+                    aport = apport,
+                )
+                myYoussef.save()
 
-            myYoussef = MyYoussefFornitures(
-                periode=periode,
-                month=dataMonth[month],
-                turbinage = turbinage,
-                irrigation = irrigation,
-                soltania = soltania,
-                vidPdev = vidPdev,
-                TransfertMassira = 0,
-                year=year,
-                aport = apport,
-            )
-            myYoussef.save()
-
-            bilantur = SuiviBilan.objects.filter(
-                periode=periode, barage="My Youssef", suivi="Turbinages").get()
-            bilanvid = SuiviBilan.objects.filter(
-                periode=periode, barage="My Youssef", suivi="Vid +Dév My Youssef").get()
-            bilansol = SuiviBilan.objects.filter(
-                periode=periode, barage="My Youssef", suivi="irrigation").get()
-            bilanirr = SuiviBilan.objects.filter(
-                periode=periode, barage="My Youssef", suivi="soltania").get()
+                bilantur = SuiviBilan.objects.filter(
+                    periode=periode, barage="My Youssef", suivi="Turbinages").get()
+                bilanvid = SuiviBilan.objects.filter(
+                    periode=periode, barage="My Youssef", suivi="Vid +Dév My Youssef").get()
+                bilansol = SuiviBilan.objects.filter(
+                    periode=periode, barage="My Youssef", suivi="irrigation").get()
+                bilanirr = SuiviBilan.objects.filter(
+                    periode=periode, barage="My Youssef", suivi="soltania").get()
 
 
-            enterVarApport(periode, "My Youssef", varData[month], apport)
-            calcInternMassira(periode, varData[month])
+                enterVarApport(periode, "My-youssef", varData[month], apport)
 
-            setattr(bilantur, dataMonth[month], turbinage)
-            setattr(bilanvid, dataMonth[month], vidPdev)
-            setattr(bilansol, dataMonth[month], soltania)
-            setattr(bilanirr, dataMonth[month], irrigation)
+                setattr(bilantur, varData[month], turbinage)
+                setattr(bilanvid, varData[month], vidPdev)
+                setattr(bilansol, varData[month], soltania)
+                setattr(bilanirr, varData[month], irrigation)
 
-            bilantur.save()
-            bilanvid.save()
-            bilansol.save()
-            bilanirr.save()
-            TransYoussef(periode, month, column)
+                bilantur.save()
+                bilanvid.save()
+                bilansol.save()
+                bilanirr.save()
+                TransYoussef(periode, month, varData[month])
+                
+                totalAepiTrans(periode, varData, month)
+                calcInternMassira(periode, varData[month])
 
     elif name == "binouidane":
         check = BinOuidaneFornitures.objects.filter(
@@ -1257,19 +1343,30 @@ def suiviBilan(request):
                 periode=periode, barage="Bin Ouidane", suivi="Vidanges +Déversés").get()
 
             enterVarApport(periode, "Bin-El ouidane", varData[month], apport)
-            calcInternMassira(periode, varData[month])
+            
 
-            setattr(bilantur, dataMonth[month], turbinage)
-            setattr(bilanvid, dataMonth[month], vidPdiv)
+            setattr(bilantur, varData[month], turbinage)
+            bilan = bilantur
+            s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
+            bilantur.total = s
+            setattr(bilanvid, varData[month], vidPdiv)
+            bilan = bilanvid
+            s=float(bilan.sep) + float(bilan.oct) + float(bilan.nov) + float(bilan.dec) + float(bilan.jan) + float(bilan.feb) + float(bilan.mar) + float(bilan.apr) + float(bilan.may) + float(bilan.jun) + float(bilan.jul) + float(bilan.aug)
+            bilanvid.total = s
             bilantur.save()
             bilanvid.save()
-            TransYoussef(periode, month, column)
-            TransBinOuidane(periode, month)
+            
+            TransBinOuidane(periode, month, varData[month])
+            
+            totalAepiTrans(periode, varData, month)
+            calcInternMassira(periode, varData[month])
 
     elif name == "hassan":
+        print('hahooooooowa')
         check = HassanPremFornitures.objects.filter(
             year=year, month=dataMonth[month])
         if len(check) < 1:
+            print('hahowa dkhel mn mor check')
             barage = HassanPremBilanHydr.objects.filter(mois=month, annee=year)
             turbinage = barage.aggregate(Sum('one'))['one__sum']
             aepi = barage.aggregate(Sum('onep'))['onep__sum']
@@ -1296,16 +1393,19 @@ def suiviBilan(request):
                 periode=periode, barage="Hassan 1er", suivi="AEPI Azilal + Demnate").get()
 
             enterVarApport(periode, "Hassan 1er", varData[month], apport)
-            calcInternMassira(periode, varData[month])
+            
 
-            setattr(bilantur, dataMonth[month], turbinage)
-            setattr(bilanvid, dataMonth[month], vidPdiv)
-            setattr(bilanaepi, dataMonth[month], aepi)
+            setattr(bilantur, varData[month], turbinage)
+            setattr(bilanvid, varData[month], vidPdiv)
+            setattr(bilanaepi, varData[month], aepi)
 
             bilantur.save()
             bilanvid.save()
             bilanaepi.save()
-            transHassanPrem(periode, month)
+            transHassanPrem(periode, month, varData[month])
+            
+            totalAepiTrans(periode, varData, month)
+            calcInternMassira(periode, varData[month])
 
     elif name == "driss":
         check=SidiDrissFornitures.objects.filter(
@@ -1334,12 +1434,17 @@ def suiviBilan(request):
             bilanpmh=SuiviBilan.objects.filter(
                 periode = periode, barage = "Sidi Driss", suivi = "PMH").get()
 
-            setattr(bilantur, dataMonth[month], canal)
-            setattr(bilanvid, dataMonth[month], vidPdiv)
-            setattr(bilanpmh, dataMonth[month], pmh)
+            setattr(bilantur, varData[month], canal)
+            setattr(bilanvid, varData[month], vidPdiv)
+            setattr(bilanpmh, varData[month], pmh)
             bilantur.save()
             bilanvid.save()
             bilanpmh.save()
+            TransYoussef(periode, month, varData[month])
+            TransBinOuidane(periode, month, varData[month])
+            transHassanPrem(periode, month, varData[month])
+            transHansali(periode, month, varData[month])
+            totalAepiTrans(periode, varData, month)
 
     elif name == "massira":
         check=MassiraFornitures.objects.filter(
@@ -1348,7 +1453,7 @@ def suiviBilan(request):
             barage=MassiraBilanHydr.objects.filter(mois = month, annee = year)
             turbinage=barage.aggregate(Sum('one'))['one__sum']
             aepiRhamna=barage.aggregate(Sum('onep1'))['onep1__sum']
-            aepiKech=barage.aggregate(Sum('onep2'))['onep2__sum']
+            aepiKech=barage.aggregate(Sum('onpe2'))['onpe2__sum']
             vid=barage.aggregate(Sum('vFond'))
             Pdiv=barage.aggregate(Sum('evacCrue'))
             vidPdiv=vid['vFond__sum'] + Pdiv['evacCrue__sum']
@@ -1375,28 +1480,30 @@ def suiviBilan(request):
 
 
             enterVarApport(periode, "Al Massira Enregitrés", varData[month], apport)
-            calcInternMassira(periode, varData[month])
             
-            setattr(bilantur, dataMonth[month], turbinage)
-            setattr(bilanvid, dataMonth[month], vidPdiv)
-            setattr(bilanRhamna, dataMonth[month], aepiRhamna)
-            setattr(bilanKech, dataMonth[month], aepiKech)
+            
+            setattr(bilantur, varData[month], turbinage)
+            setattr(bilanvid, varData[month], vidPdiv)
+            setattr(bilanRhamna, varData[month], aepiRhamna)
+            setattr(bilanKech, varData[month], aepiKech)
             bilantur.save()
             bilanvid.save()
             bilanKech.save()
             bilanRhamna.save()
+            totalAepiTrans(periode, varData, month)
+            calcInternMassira(periode, varData[month])
 
     elif name == "hansali":
         check=AelHanssaliFornitures.objects.filter(
             year = year, month = dataMonth[month])
         if len(check) < 1:
-            barage=AelHanssaliFornitures.objects.filter(
+            barage=AelHanssaliBilanHydr.objects.filter(
                 mois = month, annee = year)
             turbinage=barage.aggregate(Sum('volumeTurbine'))['volumeTurbine__sum']
             vsd = barage.aggregate(Sum('vsd'))
             vsg = barage.aggregate(Sum('vsg'))
             dev = barage.aggregate(Sum('vDesverse'))
-            vidPdiv= vsd['vFond__sum'] + vsg['evacCrue__sum'] + dev['vDesverse__sum']
+            vidPdiv= vsd['vsd__sum'] + vsg['vsg__sum'] + dev['vDesverse__sum']
             apport = barage.aggregate(Sum('appVolume'))['appVolume__sum']
             hansali = AelHanssaliFornitures(
                 periode = periode,
@@ -1414,12 +1521,15 @@ def suiviBilan(request):
                         periode = periode, barage = "A.E.Hansali", suivi = "Vidanges +Déversés").get()
 
             enterVarApport(periode, "Ahmed El Hansali", varData[month], apport)
-            calcInternMassira(periode, varData[month])
-            setattr(bilantur, dataMonth[month], turbinage)
-            setattr(bilanvid, dataMonth[month], vidPdiv)
+            
+            setattr(bilantur, varData[month], turbinage)
+            setattr(bilanvid, varData[month], vidPdiv)
             bilantur.save()
             bilanvid.save()
-            transHansali(periode, month)
+            transHansali(periode, month, varData[month])
+            
+            totalAepiTrans(periode, varData, month)
+            calcInternMassira(periode, varData[month])
 
     elif name == "messouad":
         check=AitMessaoudFornitures.objects.filter(
@@ -1430,7 +1540,7 @@ def suiviBilan(request):
             vid=barage.aggregate(Sum('vVidange'))
             Pdiv=barage.aggregate(Sum('vEvacue'))
             vidPdiv=vid['vVidange__sum'] + Pdiv['vEvacue__sum']
-            messaoud=MassiraFornitures(
+            messaoud=AitMessaoudFornitures(
                 periode = periode,
                 month = dataMonth[month],
                 turbinage = 0,
@@ -1443,8 +1553,9 @@ def suiviBilan(request):
             bilanvid=SuiviBilan.objects.filter(
                 periode = periode, barage = "Aït Messaoud", suivi = "Vidanges +Déversés").get()
 
-            setattr(bilanvid, dataMonth[month], vidPdiv)
+            setattr(bilanvid, varData[month], vidPdiv)
             bilanvid.save()
+            totalAepiTrans(periode, varData, month)
 
     
     #-------------------Total Transfert al massira---------------------#
@@ -1524,6 +1635,8 @@ def suiviBilan(request):
                                )
             trans.save()
             j+=1
+    else:
+        totalAepiTrans(periode, varData, month)
 
 
 
@@ -1533,8 +1646,37 @@ def suiviBilan(request):
     suiviSerialize=suiviBilanSerialize(suivibilan, many = True)
     return Response([suiviSerialize.data])
 
+@api_view(['POST'])
+def checkData(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        if data.get("annee") is not None:
+            annee = data["annee"]
+        if data.get("month") is not None:
+            month = data["month"]
+        if data.get("barage") is not None:
+            barage = data["barage"]
+        if "massira" in barage.lower() :
+            barageL = MassiraBilanHydr.objects.filter()
+        elif "youssef" in  barage.lower():
+            barageL = MyYoussefBilanHydr.objects.filter(annee = int(annee), mois = int(month))
+        elif "timinoutine" in barage.lower():
+            barageL = TiminoutineBilanHydr.objects.filter(annee = int(annee), mois = int(month))
+        elif "hansali" in barage.lower() :
+            barageL = AelHanssaliBilanHydr.objects.filter(annee = int(annee), mois = int(month))
+        elif "messaoud" in  barage.lower():
+            barageL = AitMessaoudBilanHydr.objects.filter(annee = int(annee), mois = int(month))
+        elif "ouidane" in barage.lower():
+            barageL = BinOuidaneBilanHydr.objects.filter(annee = int(annee), mois = int(month))
+        elif "hassan" in  barage.lower():
+            barageL = HassanPremBilanHydr.objects.filter(annee = int(annee), mois = int(month))
+        elif "driss" in barage.lower():
+            barageL = SidiDrissBilanHydr.objects.filter(annee = int(annee), mois = int(month))
 
-
+        if len(barageL) > 1:
+            return Response({'exist': True})
+        else:
+            return Response({'exist': False})
 
 @ api_view(['GET'])
 def periode(request):
@@ -1569,6 +1711,8 @@ def getUser(request):
 @ api_view(['GET', 'PUT'])
 def editSuivi(request):
     if request.method == "PUT":
+        varData = ["", "jan", "feb", "mar", "apr", "may",
+                 "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
         dataMonth = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5,
                  "jun": 6, "jul": 7, "aug" : 8, "sep": 9, "oct": 10, "nov" : 11, "dec": 12}
         data=json.loads(request.body)
@@ -1589,6 +1733,10 @@ def editSuivi(request):
         TransBinOuidane(periode, dataMonth[column], column)
         transHassanPrem(periode, dataMonth[column], column)
         transHansali(periode, dataMonth[column], column)
+        TransYoussef(periode, dataMonth[column], column)
+        
+        totalAepiTrans(periode, varData, dataMonth[column])
+        calcInternMassira(periode, column)
         return Response({"message": "succefully"})
 
     else:

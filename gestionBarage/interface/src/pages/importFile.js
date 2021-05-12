@@ -9,10 +9,15 @@ class Fichier extends React.Component  {
     super(props);
     this.state = {
       sheetList : [],
-      csrf: this.getCookie('csrftoken')
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.getCookie = this.getCookie.bind(this)
+      csrf: this.getCookie('csrftoken'),
+      barageName:"",
+      wait: false,
+      exist: false,
+      disabled: true
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.getCookie = this.getCookie.bind(this);
+    this.checkData = this.checkData.bind(this);
   }
 
   getCookie(name) {
@@ -32,7 +37,12 @@ class Fichier extends React.Component  {
   }
 
   handleChange(event){
-    console.log("changes")
+    let nom = event.target.files[0].name;
+    this.setState({
+      barageName: nom,
+      wait:true
+    })
+    
     let selectedFile = event.target.files[0];
         if (selectedFile) {
             let fileReader = new FileReader();
@@ -47,11 +57,50 @@ class Fichier extends React.Component  {
                   sheets.push(sheet)
                 });
                 this.setState({
-                  sheetList: sheets
+                  sheetList: sheets,
+                  wait:false
                 })
              }
         }
+    
+
   }
+
+  checkData(event){
+    let barage = this.state.barageName;
+    let month = event.target.value;
+    month = month.split('-');
+    let year = parseInt(month[0]);
+    month = parseInt(month[1]);
+    this.setState({
+      wait: true
+    })
+    fetch('http://127.0.0.1:8000/APIs/file/check',{
+      method: 'POST',
+      headers:{
+        'content-type': 'application/json',
+        'X-CSRFToken': this.csrf
+      },
+      body: JSON.stringify({
+          month: month,
+          barage: barage,
+          annee: year
+      })
+    })
+    .then(Request => Request.json())
+    .then(data => {
+      this.setState({
+        wait:false,
+        exist: data.exist,
+        disabled: data.exist
+      })
+
+    })
+
+  }
+
+
+
   render(){
     this.items = this.state.sheetList.map((item) =>
     <option key={item} value={item}>{item}</option>
@@ -70,6 +119,12 @@ class Fichier extends React.Component  {
               );
             })}
     </ul>
+    <div>
+          {this.state.wait ? <h1 style={{color: 'red'}}>"Attendez, s'il vous plaît"</h1> : <p></p>}
+    </div>
+    <div>
+      {this.state.exist ? <h1 style={{color: 'red'}}>"Bilan deja exist"</h1> : <p></p>}
+  </div>
     <div id="CalculApp">
       <form action="http://127.0.0.1:8000/APIs/file" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="csrfmiddlewaretoken" value={this.state.csrf}></input>
@@ -86,10 +141,10 @@ class Fichier extends React.Component  {
       </div>
       <div>
         <label htmlFor="month">Selectionner le date</label>
-        <input type="month" className="baragList"  name="month" id="month" />
+        <input type="month" className="baragList"  name="month" id="month" onChange={this.checkData} />
       </div>
         <div>
-            <input type="submit" name="submit" value="Importer" id="convert" />
+            <input disabled={this.state.disabled} type="submit" name="submit" value="Importer" id="convert" />
         </div>
       </form>
     </div>

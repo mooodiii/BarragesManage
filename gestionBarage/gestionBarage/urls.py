@@ -27,7 +27,7 @@ def login(request):
 
 @login_required(login_url='login')
 def index(request):
-    return render(request, 'index2.html')
+    return render(request, 'index.html')
 
 @login_required(login_url='login')
 def logout_view(request):

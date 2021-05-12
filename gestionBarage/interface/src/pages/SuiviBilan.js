@@ -2,7 +2,8 @@ import React from 'react';
 import XLSX from 'xlsx';
 import ReactToExcel from 'react-html-table-to-excel'
 import {FichierData} from './fichierData'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+
 
 class SuiviBilan extends React.Component  {
   constructor(props){
@@ -14,7 +15,8 @@ class SuiviBilan extends React.Component  {
       apport: [],
       show : false,
       periode:"",
-      wait: true
+      wait: true,
+      redirect:false
     }
     this.fetchData = this.fetchData.bind(this)
     this.getData = this.getData.bind(this)
@@ -49,7 +51,8 @@ class SuiviBilan extends React.Component  {
     .then(Response => Response.json())
     .then(data => {
       this.setState({
-        wait: false
+        wait: false,
+        redirect: data['redirect']
       })
       console.log('fetchiiiiing')
       fetch('http://127.0.0.1:8000/APIs/periode')
@@ -134,6 +137,10 @@ class SuiviBilan extends React.Component  {
 
 
   render(){
+    if (this.state.redirect) {
+      //Affichage de la redirection
+      return <Redirect to='/Fichier/import'/>;
+    }
     return (
       <>
       <ul className="navv">

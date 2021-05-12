@@ -14,6 +14,7 @@ urlpatterns = [
     path("barages/<str:barage>/<int:freq>", views.calcul, name="calcul"),
     path("file", views.file, name="file"),
     path("file/edit", views.editData, name="edit"),
+    path("file/check", views.checkData, name="checkFile"),
     path("suiviBilan", views.suiviBilan, name="suiviBilan"),
     path("periode", views.periode, name="periode"),
     path("suiviBilan/getData/<str:periode>", views.getData, name="getData"),

@@ -162,6 +162,8 @@ class MyYoussefFornitures(AbstractFournitures):
     TransfertMassira = models.FloatField()
     aport = models.FloatField()
 
+
+
 class AelHanssaliFornitures(AbstractFournitures):
     turbinage = models.FloatField()
     vidPdev = models.FloatField()
