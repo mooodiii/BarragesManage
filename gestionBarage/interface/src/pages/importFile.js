@@ -13,7 +13,8 @@ class Fichier extends React.Component  {
       barageName:"",
       wait: false,
       exist: false,
-      disabled: true
+      disabled: true,
+      error:""
     };
     this.handleChange = this.handleChange.bind(this);
     this.getCookie = this.getCookie.bind(this);
@@ -37,6 +38,7 @@ class Fichier extends React.Component  {
   }
 
   handleChange(event){
+    try{
     let nom = event.target.files[0].name;
     this.setState({
       barageName: nom,
@@ -62,7 +64,13 @@ class Fichier extends React.Component  {
                 })
              }
         }
-    
+      }
+      catch(error){
+        this.setState({
+          sheetList: [],
+          wait:false
+        })
+      }
 
   }
 
@@ -119,6 +127,9 @@ class Fichier extends React.Component  {
               );
             })}
     </ul>
+    <div>
+    <h1 style={{color: 'red'}}>{this.state.error}</h1>
+    </div>
     <div>
           {this.state.wait ? <h1 style={{color: 'red'}}>"Attendez, s'il vous plaît"</h1> : <p></p>}
     </div>

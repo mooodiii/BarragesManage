@@ -89,6 +89,7 @@ def freq(request, barage):
 
 @api_view(['GET'])
 def calcul(request, barage, freq):
+    print('helloooooo')
     dataMonth = ["sep", "oct", "nov", "dec", "jan",
                  "feb", "mar", "apr", "may", "jun", "jul", "aug"]
     if barage == "Complexe A.El Hansali-Massira":

@@ -121,8 +121,7 @@ class CalculApport extends React.Component {
                 return Response.json();
             })
             .then(data => {
-                console.log(data);
-                data = data[1];
+                console.log('gggggg' + data);
                     const d = new Date();
                     const dataMonth = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
                     const dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
