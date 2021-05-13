@@ -2,7 +2,10 @@ import React from 'react';
 import XLSX from 'xlsx';
 import {FichierData} from './fichierData'
 import { Link } from 'react-router-dom';
-import './GestionBarrage.css'
+import './GestionBarrage.css';
+import LoadingOverlay from 'react-loading-overlay';
+import RiseLoader from 'react-spinners/RiseLoader';
+
 
 class Fichier extends React.Component  {
   constructor(props){
@@ -42,7 +45,8 @@ class Fichier extends React.Component  {
     let nom = event.target.files[0].name;
     this.setState({
       barageName: nom,
-      wait:true
+      wait:true,
+      exist: false
     })
     
     let selectedFile = event.target.files[0];
@@ -114,7 +118,19 @@ class Fichier extends React.Component  {
     <option key={item} value={item}>{item}</option>
     );
   return (
-    <>
+    
+    
+      <>
+      <LoadingOverlay
+      active={this.state.wait}
+      spinner={<RiseLoader color="#0DCEEC"  size={30}  margin={3} />}
+      styles={{
+        overlay: (base) => ({
+          ...base,
+          background: 'transparent',
+        })
+      }}
+    >
     <ul className="navv">
     {FichierData.map((item, index) => {
               return (
@@ -131,11 +147,10 @@ class Fichier extends React.Component  {
     <h1 style={{color: 'red'}}>{this.state.error}</h1>
     </div>
     <div>
-          {this.state.wait ? <h1 style={{color: 'red'}}>"Attendez, s'il vous plaît"</h1> : <p></p>}
-    </div>
-    <div>
       {this.state.exist ? <h1 style={{color: 'red'}}>"Bilan deja exist"</h1> : <p></p>}
   </div>
+  
+    
     <div id="CalculApp">
       <form action="http://127.0.0.1:8000/APIs/file" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="csrfmiddlewaretoken" value={this.state.csrf}></input>
@@ -159,7 +174,9 @@ class Fichier extends React.Component  {
         </div>
       </form>
     </div>
+    </LoadingOverlay>
     </>
+
   );
 }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
-import XLSX from 'xlsx';
-import ReactToExcel from 'react-html-table-to-excel'
 import {FichierData} from './fichierData'
 import { Link, Redirect } from 'react-router-dom';
+import LoadingOverlay from 'react-loading-overlay';
+import RiseLoader from 'react-spinners/RiseLoader';
 
 
 class SuiviBilan extends React.Component  {
@@ -22,7 +22,7 @@ class SuiviBilan extends React.Component  {
     this.getData = this.getData.bind(this)
     this.handleChangeValues = this.handleChangeValues.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.exportCSV = this.exportCSV.bind(this)
+
   }
 
   componentWillMount(){
@@ -130,11 +130,6 @@ class SuiviBilan extends React.Component  {
   }
   }
 
-  exportCSV(){
-    fetch('http://127.0.0.1:8000/APIs/exportCSV')
-    .then(Response => Response.json())
-  }
-
 
   render(){
     if (this.state.redirect) {
@@ -142,7 +137,18 @@ class SuiviBilan extends React.Component  {
       return <Redirect to='/Fichier/import'/>;
     }
     return (
+      <LoadingOverlay
+      active={this.state.wait}
+      spinner={<RiseLoader color="#0DCEEC"  size={30}  margin={3} />}
+      styles={{
+        overlay: (base) => ({
+          ...base,
+          background: 'transparent',
+        })
+      }}
+    >
       <>
+      
       <ul className="navv">
       {FichierData.map((item, index) => {
         return (
@@ -158,9 +164,7 @@ class SuiviBilan extends React.Component  {
       <div className="SuiviBilan">
       
       <div className="choice">
-      <div>
-          {this.state.wait ? <h1 style={{color: 'red'}}>"Attendez, s'il vous plaît"</h1> : <p></p>}
-        </div>
+
         <div>
           <label for="periode">selectionner une periode</label>
           <select name="periode" id="periode" onChange={this.getData}>
@@ -350,6 +354,7 @@ class SuiviBilan extends React.Component  {
           </div>
           
       </>
+      </LoadingOverlay> 
     )
   }
 

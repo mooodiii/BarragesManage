@@ -49,6 +49,10 @@ class AbstractApport(models.Model):
     jul = models.FloatField()
     aug = models.FloatField()
 
+    def __str__(self):
+        return str(self.freq)
+    
+
     class Meta:
         abstract = True
 
@@ -94,22 +98,32 @@ class TransfertMassira(models.Model):
 #user and barages classes
 
 class Barrages(models.Model):
-    name = models.CharField(max_length=100) 
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name 
+    
+    class Meta:
+        verbose_name_plural = "Liste des Barrages"
 
 
 #apport des barrages
 
 class ApportMComplexHansaliMassira(AbstractApport):
-    pass
+    class Meta:
+        verbose_name_plural = "Apports mensuels pour l'analyse des apports réalisés - Complexe A.El Hansali-Massira"
 
 class ApportMBinouidane(AbstractApport):
-    pass
+    class Meta:
+        verbose_name_plural = "Apports mensuels pour l'analyse des apports réalisés - Bin El Ouidane"
 
 class ApportMmoulayYoussef(AbstractApport):
-    pass
+    class Meta:
+        verbose_name_plural = "Apports mensuels pour l'analyse des apports réalisés - Moulay Youssef"
 
 class ApportMHassanPrem(AbstractApport):
-    pass
+    class Meta:
+        verbose_name_plural = "Apports mensuels pour l'analyse des apports réalisés - Hassan 1er"
 
 
 #Apport au cours de cette annee

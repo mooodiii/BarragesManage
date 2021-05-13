@@ -3,11 +3,19 @@ import React from 'react';
 import './GestionBarrage.css';
 import {GestionBarrageData} from './GestionBarrageData';
 import { Link } from 'react-router-dom';
+import simComplex from '../components/simComplex'
+import simBinOuidane from '../components/simBinOuidane'
+import simMyYoussef from '../components/simMyYoussef'
 
 class Simulation extends React.Component {
     render(){
         return (
-        <h1>simulation</h1>
+        
+        <div>
+            <simBinOuidane />
+            <simComplex />
+            <simMyYoussef />
+        </div>
         )
     }
 }
