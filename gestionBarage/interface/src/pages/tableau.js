@@ -43,7 +43,7 @@ class Tableau extends React.Component  {
 
 
   getData(){
-    fetch(`http://127.0.0.1:8000/APIs/barages/Bin El Ouidane/99`)
+    /*fetch(`http://127.0.0.1:8000/APIs/barages/Bin El Ouidane/99`)
     .then(Response => {
         return Response.json();
     })
@@ -80,7 +80,7 @@ class Tableau extends React.Component  {
         ]
             }
         })
-    })
+    })*/
   }
   
   render(){

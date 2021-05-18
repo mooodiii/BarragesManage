@@ -1679,14 +1679,14 @@ def checkData(request):
         else:
             return Response({'exist': False})
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def periode(request):
     suivibilan=SuiviBilan.objects.all().values('periode').distinct()
 
     return Response(suivibilan)
 
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def getData(request, periode):
     trans = TransfertMassira.objects.filter(periode = periode)
     suivibilan=SuiviBilan.objects.filter(periode = periode)
@@ -1698,7 +1698,7 @@ def getData(request, periode):
     return Response([suiviSerialize.data, transSerialize.data, ApportSerialize.data])
 
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def getUser(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -1709,7 +1709,7 @@ def getUser(request):
     return Response({'superUser': False})
 
 
-@ api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT'])
 def editSuivi(request):
     if request.method == "PUT":
         varData = ["", "jan", "feb", "mar", "apr", "may",
@@ -1742,6 +1742,130 @@ def editSuivi(request):
 
     else:
         return Response({"GEEET": "error 404"})
+
+
+@api_view(['GET', 'POST'])
+def getSimulation(request):
+    if request.method == 'POST':
+        data=json.loads(request.body)
+        if data.get("reserve") is not None:
+            reserve=data["reserve"]
+        if data.get("evap") is not None:
+            evap=data["evap"]
+        if data.get("barage") is not None:
+            barage=data["barage"]
+        
+        first = evap[0]
+        end = evap[1]
+        
+        if barage == "binOuidane":
+            barageR = BinOuidaneBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageE = BinOuidaneBilanHydr.objects.all()
+
+
+            reserveResult = barageR.reserve
+
+            result = 0
+            for b in barageE:
+                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
+                    result += float(b.evaporation)
+                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
+                    break
+            
+            apport99 = ApportMBinouidane.objects.get(freq=99)
+            serializer99 = AppBinouidaneSerialize(apport99, many=False)
+            apport98 = ApportMBinouidane.objects.get(freq=98)
+            serializer98 = AppBinouidaneSerialize(apport98, many=False)
+            apport95 = ApportMBinouidane.objects.get(freq=95)
+            serializer95 = AppBinouidaneSerialize(apport95, many=False)
+            apport90 = ApportMBinouidane.objects.get(freq=90)
+            serializer90 = AppBinouidaneSerialize(apport90, many=False)
+        
+        elif barage == "youssef":
+            barageR = MyYoussefBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageE = MyYoussefBilanHydr.objects.all()
+
+
+            reserveResult = barageR.reserve
+
+            result = 0
+            for b in barageE:
+                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
+                    result += float(b.evaporation)
+                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
+                    break
+            
+            apport99 = ApportMmoulayYoussef.objects.get(freq=99)
+            serializer99 = AppmoulayYoussefSerialize(apport99, many=False)
+            apport98 = ApportMmoulayYoussef.objects.get(freq=98)
+            serializer98 = AppmoulayYoussefSerialize(apport98, many=False)
+            apport95 = ApportMmoulayYoussef.objects.get(freq=95)
+            serializer95 = AppmoulayYoussefSerialize(apport95, many=False)
+            apport90 = ApportMmoulayYoussef.objects.get(freq=90)
+            serializer90 = AppmoulayYoussefSerialize(apport90, many=False)
+        
+        elif barage == "complex":
+            #massira
+            barageRMassira = MassiraBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageEMassira = MassiraBilanHydr.objects.all()
+
+
+            reserveResultM = barageRMassira.reserve
+
+            resultM = 0
+            for b in barageEMassira:
+                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
+                    resultM += float(b.evaporation)
+                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
+                    break
+
+            #hansali
+            barageRhansali = AelHanssaliBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageEhansali = AelHanssaliBilanHydr.objects.all()
+
+
+            reserveResultH = barageRhansali.reserve
+
+            resultH = 0
+            for b in barageEhansali:
+                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
+                    resultH += float(b.evaporation)
+                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
+                    break
+            
+            apport99 = ApportMComplexHansaliMassira.objects.get(freq=99)
+            serializer99 = AppHansaliMassiraSerialize(apport99, many=False)
+            apport98 = ApportMComplexHansaliMassira.objects.get(freq=98)
+            serializer98 = AppHansaliMassiraSerialize(apport98, many=False)
+            apport95 = ApportMComplexHansaliMassira.objects.get(freq=95)
+            serializer95 = AppHansaliMassiraSerialize(apport95, many=False)
+            apport90 = ApportMComplexHansaliMassira.objects.get(freq=90)
+            serializer90 = AppHansaliMassiraSerialize(apport90, many=False)
+
+            return Response({
+            "reserveResult": { "massira" : round(reserveResultM, 2), "hansali" : round(reserveResultH, 2),}, 
+            "evap": {"massira" : round(resultM, 2) , "hansali" : round(resultH, 2)} ,
+            "serializer99": serializer99.data,
+            "serializer98": serializer98.data,
+            "serializer95": serializer95.data,
+            "serializer90": serializer90.data,
+            })
+            
+        
+        return Response({
+            "reserveResult": round(reserveResult, 2), 
+            "evap": round(result, 2) ,
+            "serializer99": serializer99.data,
+            "serializer98": serializer98.data,
+            "serializer95": serializer95.data,
+            "serializer90": serializer90.data,
+            })
+    
+    else:
+        pass
+
+
+
 
 
 def exportCSV(request, periode):

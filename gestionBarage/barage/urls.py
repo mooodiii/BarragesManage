@@ -19,6 +19,7 @@ urlpatterns = [
     path("periode", views.periode, name="periode"),
     path("suiviBilan/getData/<str:periode>", views.getData, name="getData"),
     path("suiviBilan/edit", views.editSuivi, name="editSuivi"),
+    path("simulation", views.getSimulation, name="simulation"),
     path("isSuperUser", views.getUser, name="superuser"),
     path("exportCSV/<str:periode>", views.exportCSV, name="csv"),
     path("exportPDF/<str:periode>", views.exportPDF, name="pdf"),

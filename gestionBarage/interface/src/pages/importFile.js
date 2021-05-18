@@ -87,11 +87,13 @@ class Fichier extends React.Component  {
     this.setState({
       wait: true
     })
-    fetch('http://127.0.0.1:8000/APIs/file/check',{
+    fetch('APIs/file/check',{
+      credentials: "same-origin",
       method: 'POST',
       headers:{
         'content-type': 'application/json',
-        'X-CSRFToken': this.csrf
+        'X-CSRFToken': this.csrf,
+        "Accept": "application/json",
       },
       body: JSON.stringify({
           month: month,
@@ -99,7 +101,7 @@ class Fichier extends React.Component  {
           annee: year
       })
     })
-    .then(Request => Request.json())
+    .then(Request => console.log(Request.json()))
     .then(data => {
       this.setState({
         wait:false,

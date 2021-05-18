@@ -1,0 +1,38 @@
+@import url("https://cdn.syncfusion.com/ej2/material.css");
+h4 {
+    text-align: center;
+}
+
+.sim {
+    text-align: center;
+    margin: 0 auto;
+    overflow-x: auto;
+    margin-bottom: 5%;
+}
+
+.title {
+    margin-top: 2%;
+    margin-bottom: 10%;
+}
+
+.table {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+.table tr th {
+    color: black;
+    background: transparent;
+}
+
+.input {
+    width: 140px;
+    background: transparent;
+    border: transparent;
+}
+
+#date {
+    width: 20%;
+    margin: 0 auto;
+}
