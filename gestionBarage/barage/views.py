@@ -8,6 +8,7 @@ from django.http import JsonResponse, response
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 from django.urls.conf import path
+from django.views.decorators import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import csrf_protect
 from rest_framework.decorators import api_view
@@ -1647,10 +1648,14 @@ def suiviBilan(request):
     suiviSerialize=suiviBilanSerialize(suivibilan, many = True)
     return Response([suiviSerialize.data])
 
-@api_view(['POST'])
+
+@api_view(['POST', 'GET'])
 def checkData(request):
     if request.method == "POST":
-        data = json.loads(request.body)
+        print('dkhelt')
+        data = json.dumps(request.data)
+        data = json.loads(data)
+        print(data)
         if data.get("annee") is not None:
             annee = data["annee"]
         if data.get("month") is not None:
@@ -1675,9 +1680,14 @@ def checkData(request):
             barageL = SidiDrissBilanHydr.objects.filter(annee = int(annee), mois = int(month))
 
         if len(barageL) > 1:
+            print('dkhelt len barage')
             return Response({'exist': True})
+            print('dezt mor return')
         else:
+            print('dkhelt l else')
             return Response({'exist': False})
+    else:
+        pass
 
 @api_view(['GET'])
 def periode(request):
@@ -1747,7 +1757,8 @@ def editSuivi(request):
 @api_view(['GET', 'POST'])
 def getSimulation(request):
     if request.method == 'POST':
-        data=json.loads(request.body)
+        data= json.dumps(request.data)
+        data = json.loads(data)
         if data.get("reserve") is not None:
             reserve=data["reserve"]
         if data.get("evap") is not None:
