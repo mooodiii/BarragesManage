@@ -1680,11 +1680,8 @@ def checkData(request):
             barageL = SidiDrissBilanHydr.objects.filter(annee = int(annee), mois = int(month))
 
         if len(barageL) > 1:
-            print('dkhelt len barage')
             return Response({'exist': True})
-            print('dezt mor return')
         else:
-            print('dkhelt l else')
             return Response({'exist': False})
     else:
         pass
@@ -1770,7 +1767,10 @@ def getSimulation(request):
         end = evap[1]
         
         if barage == "binOuidane":
-            barageR = BinOuidaneBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageR = BinOuidaneBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
+            if len(barageR) < 1:
+                return Response({'error' : True})
+            barageR = barageR.get()
             barageE = BinOuidaneBilanHydr.objects.all()
 
 
@@ -1793,7 +1793,10 @@ def getSimulation(request):
             serializer90 = AppBinouidaneSerialize(apport90, many=False)
         
         elif barage == "youssef":
-            barageR = MyYoussefBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageR = MyYoussefBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
+            if len(barageR) < 1:
+                return Response({'error' : True})
+            barageR = barageR.get()
             barageE = MyYoussefBilanHydr.objects.all()
 
 
@@ -1817,7 +1820,10 @@ def getSimulation(request):
         
         elif barage == "complex":
             #massira
-            barageRMassira = MassiraBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageRMassira = MassiraBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
+            if len(barageRMassira) < 1:
+                return Response({'error' : True})
+            barageRMassira = barageRMassira.get()
             barageEMassira = MassiraBilanHydr.objects.all()
 
 
@@ -1831,7 +1837,10 @@ def getSimulation(request):
                     break
 
             #hansali
-            barageRhansali = AelHanssaliBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2])).get()
+            barageRhansali = AelHanssaliBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
+            if len(barageRhansali) < 1:
+                return Response({'error' : True})
+            barageRhansali = barageRhansali.get()
             barageEhansali = AelHanssaliBilanHydr.objects.all()
 
 
@@ -1854,16 +1863,18 @@ def getSimulation(request):
             serializer90 = AppHansaliMassiraSerialize(apport90, many=False)
 
             return Response({
-            "reserveResult": { "massira" : round(reserveResultM, 2), "hansali" : round(reserveResultH, 2),}, 
-            "evap": {"massira" : round(resultM, 2) , "hansali" : round(resultH, 2)} ,
-            "serializer99": serializer99.data,
-            "serializer98": serializer98.data,
-            "serializer95": serializer95.data,
-            "serializer90": serializer90.data,
+                "error": False,
+                "reserveResult": { "massira" : round(reserveResultM, 2), "hansali" : round(reserveResultH, 2),}, 
+                "evap": {"massira" : round(resultM, 2) , "hansali" : round(resultH, 2)} ,
+                "serializer99": serializer99.data,
+                "serializer98": serializer98.data,
+                "serializer95": serializer95.data,
+                "serializer90": serializer90.data,
             })
             
         
         return Response({
+            "error": False,
             "reserveResult": round(reserveResult, 2), 
             "evap": round(result, 2) ,
             "serializer99": serializer99.data,

@@ -4,6 +4,7 @@ import 'react-date-range/dist/styles.css';
 import DatePicker from 'react-date-picker';
 import 'react-date-range/dist/theme/default.css';
 import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 class SimMyYoussef extends React.Component{
     constructor(props){
@@ -34,6 +35,8 @@ class SimMyYoussef extends React.Component{
             app98:"",
             app95:"",
             app90:"",
+            startYear: "",
+            endYear: "",
         }
         this.handleSelect = this.handleSelect.bind(this);
         this.onCalcul = this.onCalcul.bind(this);
@@ -47,7 +50,6 @@ class SimMyYoussef extends React.Component{
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -60,6 +62,9 @@ class SimMyYoussef extends React.Component{
     handleSelect(e){
         const csrftoken = this.getCookie('csrftoken');
         let data = e.target.value;
+        if(data == null){
+            return;
+        }
         let startDate = new Date(data[0])
         let endDate = new Date(data[1])
         let beforeFirst = new Date()
@@ -69,6 +74,8 @@ class SimMyYoussef extends React.Component{
         afterSecond.setDate(endDate.getDate() + 1);
 
         this.setState({
+            startYear: startDate.getFullYear(),
+            endYear: endDate.getFullYear(),
             firstDate: startDate.toDateString(),
             beforeFirst: beforeFirst.toDateString(),
             first : fir.toDateString(),
@@ -93,18 +100,22 @@ class SimMyYoussef extends React.Component{
               .then(Response => Response.json())
               .then(data => {
                   console.log(data);
-                  let data99 = data.serializer99
-                  let data98 = data.serializer98
-                  let data95 = data.serializer95
-                  let data90 = data.serializer90
-                  this.setState({
-                      reserve: data.reserveResult,
-                      evap: data.evap,
-                      app90: this.calcApport(data90),
-                      app99: this.calcApport(data99),
-                      app95: this.calcApport(data95),
-                      app98: this.calcApport(data98),
-                  })
+                  if (data.error == false){
+                    let data99 = data.serializer99
+                    let data98 = data.serializer98
+                    let data95 = data.serializer95
+                    let data90 = data.serializer90
+                    this.setState({
+                        reserve: data.reserveResult,
+                        evap: data.evap,
+                        app90: this.calcApport(data90),
+                        app99: this.calcApport(data99),
+                        app95: this.calcApport(data95),
+                        app98: this.calcApport(data98),
+                    })
+                }else{
+                    alert('there is no data for the periode you entred, try with other month')
+                }
               })
       }
 
@@ -220,6 +231,13 @@ class SimMyYoussef extends React.Component{
             </div>
             
             <div  className="sim" >
+            <ReactHTMLTableToExcel
+                    id="test-table-xls-button"
+                    className="download-table-xls-button"
+                    table="table-to-xls"
+                    filename="tablexls"
+                    sheet="simulation Moulay Youssef"
+                    buttonText="Exporter fichier Excel"/>
 
                 <table className="table">
                     <thead>
@@ -231,7 +249,7 @@ class SimMyYoussef extends React.Component{
                             <br />%</th>
                             <th rowSpan="1">Apports</th>
                             <th rowSpan="1">Evap</th>
-                            <th colSpan="3">Programme d'irrigation 2019 - 2020</th>
+                            <th colSpan="3">Programme d'irrigation {this.state.startYear} - {this.state.endYear}</th>
                             <th>AEPI</th>
                             <th rowSpan="2">Espérance <br />de  stock au</th>
                             <th rowSpan="3">Taux de <br />rempl <br />%</th>
@@ -284,6 +302,72 @@ class SimMyYoussef extends React.Component{
                             <td ><input className="numbers" onBlur={this.onCalcul} name="app90" type="number" defaultValue={this.state.app90} /></td>
                             <td><input className="numbers" onBlur={this.onCalcul} name="esStock90" type="number" defaultValue={this.state.esStock90} /></td>
                             <td><input className="numbers" onBlur={this.onCalcul} name="tauxRemp90" type="number" defaultValue={this.state.tauxRemp90} /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table className="table" id="table-to-xls" style={{display:"none"}}>
+                    <thead>
+                        <tr>
+                            <th rowSpan="3">Barrage</th>
+                            <th rowSpan="1">Réserve</th>
+                            <th rowSpan="3">Probabilités 
+                            <br />d'Apports 
+                            <br />%</th>
+                            <th rowSpan="1">Apports</th>
+                            <th rowSpan="1">Evap</th>
+                            <th colSpan="3">Programme d'irrigation {this.state.startYear} - {this.state.endYear}</th>
+                            <th>AEPI</th>
+                            <th rowSpan="2">Espérance <br />de  stock au</th>
+                            <th rowSpan="3">Taux de <br />rempl <br />%</th>
+                        </tr>
+                        <tr>
+                            <th rowSpan="2" onChange={this.onchange}>{this.state.firstDate}</th>
+                            <th rowSpan="2">{this.state.firstDate}<span style={{color: "red"}}>&gt; </span>{this.state.secondDate}</th>
+                            <th rowSpan="2">{this.state.firstDate}<span style={{color: "red"}}>&gt; </span>{this.state.secondDate}</th>
+                            <th rowSpan="1">réalisé</th>
+                            <th rowSpan="1">Reste</th>
+                            <th rowSpan="1">Total</th>
+                            <th>Reste</th>
+                        </tr>
+                        <tr>
+                            <th rowSpan="1">{this.state.first}<span style={{color: "red"}}>&gt; </span>{this.state.beforeFirst}</th>
+                            <th rowSpan="1">{this.state.firstDate}<span style={{color: "red"}}>&gt; </span>{this.state.secondDate}</th>
+                            <th rowSpan="1">{this.state.firstDate}<span style={{color: "red"}}>&gt; </span>{this.state.secondDate}</th>
+                            <th>{this.state.firstDate}<span style={{color: "red"}}>&gt; </span>{this.state.secondDate}</th>
+                            <th>{this.state.afterSecond}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowSpan="4">Bin El Ouidane</td>
+                            <td rowSpan="4">{this.state.reserve} </td>
+                            <td >99</td>
+                            <td >{this.state.app99} </td>
+                            <td rowSpan="4">{this.state.evap} </td>
+                            <td rowSpan="4">{this.state.irrRealise} </td>
+                            <td rowSpan="4">{this.state.irrReste}</td>
+                            <td rowSpan="4">{this.state.irrTotal} </td>
+                            <td rowSpan="4">{this.state.aepiReste} </td>
+                            <td>{this.state.esStock99}</td>
+                            <td>{this.state.tauxRemp99}</td>
+                        </tr>
+                        <tr>
+                            <td>98</td>
+                            <td>{this.state.app98} </td>
+                            <td>{this.state.esStock98} </td>
+                            <td>{this.state.tauxRemp98} </td>
+                        </tr>
+                        <tr>
+                            <td >95</td>
+                            <td >{this.state.app95} </td>
+                            <td>{this.state.esStock95} </td>
+                            <td>{this.state.tauxRemp95} </td>
+                        </tr>
+                        <tr>
+                            <td >90</td>
+                            <td >{this.state.app90} </td>
+                            <td>{this.state.esStock90} </td>
+                            <td>{this.state.tauxRemp90} </td>
                         </tr>
                     </tbody>
                 </table>

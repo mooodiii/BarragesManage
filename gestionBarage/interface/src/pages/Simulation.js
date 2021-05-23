@@ -41,7 +41,7 @@ class Simulation extends React.Component {
         </ul>
         <div style={{textAlign : "center"}}>
             <button name="binOuidane" onClick={this.ShowHide}>Bin Ouidane</button>
-            <button name="complex" onClick={this.ShowHide}>Complex</button>
+            <button name="complex" onClick={this.ShowHide}>Complexe al Hansali-Al Massira</button>
             <button name="youssef" onClick={this.ShowHide}>My Youssef</button>
         </div>
         {this.state.show == "binOuidane" ?

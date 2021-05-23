@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'q1b52&&5y8oxk5)01ypvy=se(zu-7)88$0x6czvzhtqi+4c5rj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
