@@ -1,9 +1,7 @@
 import React from 'react';
-import XLSX from 'xlsx';
-import {FichierData} from './fichierData'
-import { Link } from 'react-router-dom';
+
 import './GestionBarrage.css';
-import {Bar, Line, Pie, Doughnut, PolarArea, Radar, Scatter} from 'react-chartjs-2';
+import {Bar, Line, Pie, Doughnut, PolarArea, Radar} from 'react-chartjs-2';
 
 class Tableau extends React.Component  {
   constructor(props){

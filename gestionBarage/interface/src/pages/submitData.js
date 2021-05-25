@@ -1,6 +1,4 @@
 import React from 'react';
-import XLSX from 'xlsx';
-import {FichierData} from './fichierData'
 import { Link } from 'react-router-dom';
 import './submitData.css'
 
@@ -47,7 +45,7 @@ class submitData extends React.Component  {
 
   fetchData(){
     console.log('fetching .....')
-    fetch('http://127.0.0.1:8000/APIs/file')
+    fetch('/APIs/file')
     .then(Response => {
       console.log(Response);
       return Response.json()
@@ -81,7 +79,7 @@ class submitData extends React.Component  {
     
     if (this.array.length >= 1) {
       this.array.forEach(element => {
-          fetch(`http://127.0.0.1:8000/APIs/file/edit`, {
+          fetch(`/APIs/file/edit`, {
                   method: 'PUT',
                   headers:{
                     'content-type': 'application/json',
@@ -98,7 +96,7 @@ class submitData extends React.Component  {
               .then(data => console.log(data))
       })
   } else {
-      fetch(`http://127.0.0.1:8000/APIs/`)
+      fetch(`/APIs/`)
           .then(Response => Response.json())
           .then(data => console.log(data))
   }

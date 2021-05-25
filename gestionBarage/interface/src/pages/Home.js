@@ -6,6 +6,7 @@ function Home() {
       
       <img 
         src={logo}
+        alt="Logo Agence du Bassin Hydraulique de l'Oum Er Rbia"
         width="550px"
       ></img>
     </div>

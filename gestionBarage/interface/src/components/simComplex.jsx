@@ -1,7 +1,6 @@
 import React from 'react';
 import './simulation.css';
 import 'react-date-range/dist/styles.css'; 
-import DatePicker from 'react-date-picker';
 import 'react-date-range/dist/theme/default.css';
 import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
@@ -128,7 +127,7 @@ class SimComplex extends React.Component{
         let reserve = [startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()]
         let evap = [[startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()], [endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate()]]
 
-        fetch(`http://127.0.0.1:8000/APIs/simulation`, {
+        fetch(`/APIs/simulation`, {
                   method: 'POST',
                   headers:{
                     'content-type': 'application/json',
@@ -143,7 +142,7 @@ class SimComplex extends React.Component{
               .then(Response => Response.json())
               .then(data => {
                     console.log(data);
-                    if (data.error == false){
+                    if (data.error === false){
                         let data99 = data.serializer99
                         let data98 = data.serializer98
                         let data95 = data.serializer95
@@ -254,7 +253,7 @@ class SimComplex extends React.Component{
     calcApport(data){
         const d = new Date();
                     const dataMonth = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-                    const dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                    let dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     if (this.isLeap(d.getFullYear())) {
                         dataJperM = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     }

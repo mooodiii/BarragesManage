@@ -1,11 +1,9 @@
 import React from 'react';
 import './simulation.css';
 import 'react-date-range/dist/styles.css'; 
-import DatePicker from 'react-date-picker';
 import 'react-date-range/dist/theme/default.css';
 import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import xlsx from 'xlsx';
 
 class SimBinOuidane extends React.Component{
     constructor(props){
@@ -90,7 +88,7 @@ class SimBinOuidane extends React.Component{
         let reserve = [startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()]
         let evap = [[startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()], [endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate()]]
 
-        fetch(`http://127.0.0.1:8000/APIs/simulation`, {
+        fetch(`/APIs/simulation`, {
                   method: 'POST',
                   headers:{
                     'content-type': 'application/json',
@@ -105,7 +103,7 @@ class SimBinOuidane extends React.Component{
               .then(Response => Response.json())
               .then(data => {
                   console.log(data);
-                  if (data.error == false){
+                  if (data.error === false){
                     let data99 = data.serializer99
                     let data98 = data.serializer98
                     let data95 = data.serializer95
@@ -159,7 +157,7 @@ class SimBinOuidane extends React.Component{
     calcApport(data){
         const d = new Date();
                     const dataMonth = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-                    const dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                    let dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     if (this.isLeap(d.getFullYear())) {
                         dataJperM = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     }
@@ -224,10 +222,10 @@ class SimBinOuidane extends React.Component{
     }
 
     save(){
-        /*let periode = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' - ' + endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();*/
+        /*let periode = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' - ' + endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();
         let data = ["Bin El Ouidane", this.state.periode , this.state.reserve, this.state.evap, this.state.irrRealise , this.state.irrReste, this.state.irrTotal, 
         this.state.aepiReste, this.state.debitSanitaire, this.state.transfert, this.state.esStock99, this.state.esStock98, this.state.esStock95, this.state.esStock90, 
-        this.state.tauxRemp99, this.state.tauxRemp98, this.state.tauxRemp95, this.state.tauxRemp90, this.state.app99, this.state.app98, this.state.app95, this.state.app90]
+        this.state.tauxRemp99, this.state.tauxRemp98, this.state.tauxRemp95, this.state.tauxRemp90, this.state.app99, this.state.app98, this.state.app95, this.state.app90]*/
     }
 
     render(){

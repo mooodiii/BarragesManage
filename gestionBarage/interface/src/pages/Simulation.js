@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react';
 import React from 'react';
 import './GestionBarrage.css';
 import {GestionBarrageData} from './GestionBarrageData';
@@ -44,10 +43,10 @@ class Simulation extends React.Component {
             <button name="complex" onClick={this.ShowHide}>Complexe al Hansali-Al Massira</button>
             <button name="youssef" onClick={this.ShowHide}>My Youssef</button>
         </div>
-        {this.state.show == "binOuidane" ?
+        {this.state.show === "binOuidane" ?
          <div> <SimBinOuidane /> </div> : 
-         this.state.show == "complex" ? 
-         <div> <SimComplex /> </div> : this.state.show =="youssef" ?
+         this.state.show === "complex" ? 
+         <div> <SimComplex /> </div> : this.state.show ==="youssef" ?
          <div> <SimMyYoussef /> </div> : <div></div>
          }
         

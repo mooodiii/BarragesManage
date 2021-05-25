@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
-import logo from '../images/logo.png';
 
 
 class Navbar extends React.Component {
@@ -26,7 +25,7 @@ class Navbar extends React.Component {
     this.fetchData()
   }
   fetchData(){
-    fetch('http://127.0.0.1:8000/APIs/isSuperUser')
+    fetch('/APIs/isSuperUser')
     .then(Response => Response.json())
     .then(data => {
       this.setState({

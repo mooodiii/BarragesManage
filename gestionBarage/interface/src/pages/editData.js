@@ -40,7 +40,7 @@ class Fichier extends React.Component  {
   return (
     <div className='Fichier'>
       <h1>Import Fichier</h1>
-      <form action="http://127.0.0.1:8000/APIs/file" method="post" enctype="multipart/form-data">
+      <form action="/APIs/file" method="post" enctype="multipart/form-data">
       <input type="hidden" name="csrfmiddlewaretoken" value="M0QkKCIlbXFgMp2PzseqK39mBWhCN6FaMbBZAymzMW93ZR0elYSFHtLb42JIiCC4"></input>
         <input class="form-control" type="file" id="input" name="input" accept=".xls,.xlsx" onChange={this.handleChange}/>
         <select name="sheet" id="sheet">

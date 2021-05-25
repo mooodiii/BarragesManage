@@ -1,5 +1,4 @@
 import React from 'react';
-import XLSX from 'xlsx';
 import {FichierData} from './fichierData'
 import { Link } from 'react-router-dom';
 

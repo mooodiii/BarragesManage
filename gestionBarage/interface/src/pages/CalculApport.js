@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react';
 import React from 'react';
 import './GestionBarrage.css';
 import {GestionBarrageData} from './GestionBarrageData';
@@ -69,7 +68,7 @@ class CalculApport extends React.Component {
   }
 
   fetchDataBarage(){
-    fetch("http://127.0.0.1:8000/APIs/barages/")
+    fetch("/APIs/barages/")
         .then(Response => {
             return Response.json();
         })
@@ -93,7 +92,7 @@ class CalculApport extends React.Component {
         complex2 : "",
       })
       
-      fetch(`http://127.0.0.1:8000/APIs/barages/${e.target.value}`)
+      fetch(`/APIs/barages/${e.target.value}`)
           .then(Response => {
             console.log(Response)
               return Response.json();
@@ -116,7 +115,7 @@ class CalculApport extends React.Component {
       result: ""
     })
     
-    fetch(`http://127.0.0.1:8000/APIs/barages/${this.state.barage}/${this.state.freq}`)
+    fetch(`/APIs/barages/${this.state.barage}/${this.state.freq}`)
             .then(Response => {
                 return Response.json();
             })
@@ -124,7 +123,7 @@ class CalculApport extends React.Component {
                 console.log('gggggg' + data);
                     const d = new Date();
                     const dataMonth = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-                    const dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                    let dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     if (this.isLeap(d.getFullYear())) {
                         dataJperM = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     }

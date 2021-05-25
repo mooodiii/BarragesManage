@@ -47,7 +47,7 @@ class SuiviBilan extends React.Component  {
   
 
   fetchData(){
-    fetch('http://127.0.0.1:8000/APIs/suiviBilan')
+    fetch('/APIs/suiviBilan')
     .then(Response => Response.json())
     .then(data => {
       this.setState({
@@ -55,7 +55,7 @@ class SuiviBilan extends React.Component  {
         redirect: data['redirect']
       })
       console.log('fetchiiiiing')
-      fetch('http://127.0.0.1:8000/APIs/periode')
+      fetch('/APIs/periode')
       .then(Response => Response.json())
       .then(data =>{
         let list = [];
@@ -76,7 +76,7 @@ class SuiviBilan extends React.Component  {
       data : [],
       show : false,
     })
-    fetch(`http://127.0.0.1:8000/APIs/suiviBilan/getData/${e.target.value}`)
+    fetch(`/APIs/suiviBilan/getData/${e.target.value}`)
     .then(Response => Response.json())
     .then(data =>{
       console.log(data);
@@ -106,7 +106,7 @@ class SuiviBilan extends React.Component  {
     window.location.reload();
     if (this.array.length >= 1) {
       this.array.forEach(element => {
-          fetch(`http://127.0.0.1:8000/APIs/suiviBilan/edit`, {
+          fetch(`/APIs/suiviBilan/edit`, {
                   method: 'PUT',
                   headers:{
                     'content-type': 'application/json',
@@ -179,9 +179,9 @@ class SuiviBilan extends React.Component  {
         
         { this.state.show ? 
         <div>
-          <button className="btn"><a href={`http://127.0.0.1:8000/APIs/exportCSV/${this.state.periode}`}>Export CSV</a></button>
-          <button className="btn"><a href={`http://127.0.0.1:8000/APIs/exportPDF/${this.state.periode}`}>Export PDF</a></button>
-          <button className="btn"><a href={`http://127.0.0.1:8000/APIs/exportEXCEL/${this.state.periode}`}>Export EXCEL</a></button>
+          <button className="btn"><a href={`/APIs/exportCSV/${this.state.periode}`}>Export CSV</a></button>
+          <button className="btn"><a href={`/APIs/exportPDF/${this.state.periode}`}>Export PDF</a></button>
+          <button className="btn"><a href={`/APIs/exportEXCEL/${this.state.periode}`}>Export EXCEL</a></button>
       </div>
       : null }
       </div>
@@ -209,7 +209,7 @@ class SuiviBilan extends React.Component  {
               </thead>
               <tbody>
                 {this.state.data.map(item => {
-                  if (item.suivi == 'Transfert Massira')
+                  if (item.suivi === 'Transfert Massira')
                   {
                     return (
                       <tr className='massira'>
@@ -301,7 +301,7 @@ class SuiviBilan extends React.Component  {
               </thead>
               <tbody>
                 {this.state.apport.map(item => {
-                  if (item.barage == 'Al Massira Ap. Inter.')
+                  if (item.barage === 'Al Massira Ap. Inter.')
                   {
                     return (
                       <tr className='massira'>
