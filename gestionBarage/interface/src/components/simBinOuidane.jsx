@@ -224,7 +224,10 @@ class SimBinOuidane extends React.Component{
     }
 
     save(){
-
+        /*let periode = startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' - ' + endDate.getFullYear() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getDate();*/
+        let data = ["Bin El Ouidane", this.state.periode , this.state.reserve, this.state.evap, this.state.irrRealise , this.state.irrReste, this.state.irrTotal, 
+        this.state.aepiReste, this.state.debitSanitaire, this.state.transfert, this.state.esStock99, this.state.esStock98, this.state.esStock95, this.state.esStock90, 
+        this.state.tauxRemp99, this.state.tauxRemp98, this.state.tauxRemp95, this.state.tauxRemp90, this.state.app99, this.state.app98, this.state.app95, this.state.app90]
     }
 
     render(){
@@ -244,7 +247,7 @@ class SimBinOuidane extends React.Component{
             </div>
             
             <div  className="sim">
-            <button onClick={this.save}> Save </button>
+            <button onClick={this.save} style={{display:"none"}} > Save </button>
             <ReactHTMLTableToExcel
                     id="test-table-xls-button"
                     className="download-table-xls-button"
