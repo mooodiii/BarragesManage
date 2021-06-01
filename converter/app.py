@@ -4,10 +4,15 @@ import pandas as pd
 from tkinter.filedialog import asksaveasfile
 root = Tk()
 
+
+
 def save():
     files = [('All Files', '*.*'), ('Excel File', '*.xlsx*')]
     file = asksaveasfile(filetypes = files, defaultextension = '.xlsx')
     return file.name
+
+def callback(sv, id):
+    print (sv.get(), id)
 
 def handleChange(data, fuite):
     df = xw.load(index=False)
@@ -27,10 +32,20 @@ def handleChange(data, fuite):
         f += 1
         t[f] = data[g]
         g += 1
-    df.columns = t
-    df = df.loc[(df[t[0]] >= 1)]
-    path = save()
-    df.to_excel(path, index=False)
+
+    sub = Toplevel(root)
+    v = 0
+    for i in t:
+        sv = StringVar()
+        sv.trace("w", lambda name, index, mode, sv=sv: callback(sv, i))
+        entry = Entry(sub, textvariable=sv)
+        entry.insert(0, i)
+        entry.pack()
+        v+=1
+    #df.columns = t
+    #df = df.loc[(df[t[0]] >= 1)]
+    #path = save()
+    #df.to_excel(path, index=False)
 
 myLabel = Label(root, text="select a barage:")
 myLabel.grid(row=0, column=0, columnspan=8)
@@ -76,7 +91,7 @@ button.grid(column=1, row=2)
 button = Button(root, text="Massira", command=clickMassira)
 button.grid(column=2, row=2)
 
-button = Button(root, text="MyYoussef", command=clickMyYoussef, bg='Red')
+button = Button(root, text="MyYoussef", command=clickMyYoussef)
 button.grid(column=3, row=2)
 
 button = Button(root, text="Timoutine", command=clickTimoutine)
