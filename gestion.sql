@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2021 at 06:28 PM
+-- Generation Time: Jun 01, 2021 at 07:32 PM
 -- Server version: 8.0.23-0ubuntu0.20.04.1
 -- PHP Version: 8.0.2
 
@@ -27,9 +27,11 @@ SET time_zone = "+00:00";
 -- Table structure for table `auth_group`
 --
 
-CREATE TABLE `auth_group` (
-  `id` int NOT NULL,
-  `name` varchar(150) NOT NULL
+CREATE TABLE IF NOT EXISTS `auth_group` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -38,10 +40,13 @@ CREATE TABLE `auth_group` (
 -- Table structure for table `auth_group_permissions`
 --
 
-CREATE TABLE `auth_group_permissions` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `group_id` int NOT NULL,
-  `permission_id` int NOT NULL
+  `permission_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
+  KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -50,12 +55,14 @@ CREATE TABLE `auth_group_permissions` (
 -- Table structure for table `auth_permission`
 --
 
-CREATE TABLE `auth_permission` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `auth_permission` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `content_type_id` int NOT NULL,
-  `codename` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `codename` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`)
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `auth_permission`
@@ -209,8 +216,8 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 -- Table structure for table `auth_user`
 --
 
-CREATE TABLE `auth_user` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `auth_user` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `password` varchar(128) NOT NULL,
   `last_login` datetime(6) DEFAULT NULL,
   `is_superuser` tinyint(1) NOT NULL,
@@ -220,8 +227,10 @@ CREATE TABLE `auth_user` (
   `email` varchar(254) NOT NULL,
   `is_staff` tinyint(1) NOT NULL,
   `is_active` tinyint(1) NOT NULL,
-  `date_joined` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `date_joined` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `auth_user`
@@ -238,10 +247,13 @@ INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `userna
 -- Table structure for table `auth_user_groups`
 --
 
-CREATE TABLE `auth_user_groups` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `auth_user_groups` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `group_id` int NOT NULL
+  `group_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
+  KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -250,10 +262,13 @@ CREATE TABLE `auth_user_groups` (
 -- Table structure for table `auth_user_user_permissions`
 --
 
-CREATE TABLE `auth_user_user_permissions` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `auth_user_user_permissions` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `permission_id` int NOT NULL
+  `permission_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` (`user_id`,`permission_id`),
+  KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -262,8 +277,8 @@ CREATE TABLE `auth_user_user_permissions` (
 -- Table structure for table `barage_aelhanssalibilanhydr`
 --
 
-CREATE TABLE `barage_aelhanssalibilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_aelhanssalibilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -278,8 +293,9 @@ CREATE TABLE `barage_aelhanssalibilanhydr` (
   `volumeTurbine` double NOT NULL,
   `vsd` double NOT NULL,
   `vsg` double NOT NULL,
-  `vDesverse` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `vDesverse` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_aelhanssalibilanhydr`
@@ -324,16 +340,17 @@ INSERT INTO `barage_aelhanssalibilanhydr` (`id`, `annee`, `mois`, `jour`, `cote`
 -- Table structure for table `barage_aelhanssalifornitures`
 --
 
-CREATE TABLE `barage_aelhanssalifornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_aelhanssalifornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `vidPdev` double NOT NULL,
   `TransfertMassira` double NOT NULL,
   `month` varchar(4) NOT NULL,
   `year` int NOT NULL,
-  `aport` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aport` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_aelhanssalifornitures`
@@ -353,8 +370,8 @@ INSERT INTO `barage_aelhanssalifornitures` (`id`, `periode`, `turbinage`, `vidPd
 -- Table structure for table `barage_aitmessaoudbilanhydr`
 --
 
-CREATE TABLE `barage_aitmessaoudbilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_aitmessaoudbilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -370,8 +387,9 @@ CREATE TABLE `barage_aitmessaoudbilanhydr` (
   `volumeTurbine` double NOT NULL,
   `vVidange` double NOT NULL,
   `vEvacue` double NOT NULL,
-  `pluie` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `pluie` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_aitmessaoudbilanhydr`
@@ -444,16 +462,17 @@ INSERT INTO `barage_aitmessaoudbilanhydr` (`id`, `annee`, `mois`, `jour`, `cote`
 -- Table structure for table `barage_aitmessaoudfornitures`
 --
 
-CREATE TABLE `barage_aitmessaoudfornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_aitmessaoudfornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `irrigation` double NOT NULL,
   `aepi` double NOT NULL,
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_aitmessaoudfornitures`
@@ -474,8 +493,8 @@ INSERT INTO `barage_aitmessaoudfornitures` (`id`, `periode`, `turbinage`, `irrig
 -- Table structure for table `barage_apportmbinouidane`
 --
 
-CREATE TABLE `barage_apportmbinouidane` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_apportmbinouidane` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `freq` int NOT NULL,
   `sep` double NOT NULL,
   `oct` double NOT NULL,
@@ -488,8 +507,9 @@ CREATE TABLE `barage_apportmbinouidane` (
   `may` double NOT NULL,
   `jun` double NOT NULL,
   `jul` double NOT NULL,
-  `aug` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aug` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_apportmbinouidane`
@@ -510,8 +530,8 @@ INSERT INTO `barage_apportmbinouidane` (`id`, `freq`, `sep`, `oct`, `nov`, `dec`
 -- Table structure for table `barage_apportmcomplexhansalimassira`
 --
 
-CREATE TABLE `barage_apportmcomplexhansalimassira` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_apportmcomplexhansalimassira` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `freq` int NOT NULL,
   `sep` double NOT NULL,
   `oct` double NOT NULL,
@@ -524,8 +544,9 @@ CREATE TABLE `barage_apportmcomplexhansalimassira` (
   `may` double NOT NULL,
   `jun` double NOT NULL,
   `jul` double NOT NULL,
-  `aug` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aug` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_apportmcomplexhansalimassira`
@@ -547,8 +568,8 @@ INSERT INTO `barage_apportmcomplexhansalimassira` (`id`, `freq`, `sep`, `oct`, `
 -- Table structure for table `barage_apportmhassanprem`
 --
 
-CREATE TABLE `barage_apportmhassanprem` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_apportmhassanprem` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `freq` int NOT NULL,
   `sep` double NOT NULL,
   `oct` double NOT NULL,
@@ -561,8 +582,9 @@ CREATE TABLE `barage_apportmhassanprem` (
   `may` double NOT NULL,
   `jun` double NOT NULL,
   `jul` double NOT NULL,
-  `aug` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aug` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_apportmhassanprem`
@@ -584,8 +606,8 @@ INSERT INTO `barage_apportmhassanprem` (`id`, `freq`, `sep`, `oct`, `nov`, `dec`
 -- Table structure for table `barage_apportmmoulayyoussef`
 --
 
-CREATE TABLE `barage_apportmmoulayyoussef` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_apportmmoulayyoussef` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `freq` int NOT NULL,
   `sep` double NOT NULL,
   `oct` double NOT NULL,
@@ -598,8 +620,9 @@ CREATE TABLE `barage_apportmmoulayyoussef` (
   `may` double NOT NULL,
   `jun` double NOT NULL,
   `jul` double NOT NULL,
-  `aug` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aug` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_apportmmoulayyoussef`
@@ -621,12 +644,13 @@ INSERT INTO `barage_apportmmoulayyoussef` (`id`, `freq`, `sep`, `oct`, `nov`, `d
 -- Table structure for table `barage_barageuploaded`
 --
 
-CREATE TABLE `barage_barageuploaded` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_barageuploaded` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(40) NOT NULL,
   `month` int NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_barageuploaded`
@@ -641,10 +665,11 @@ INSERT INTO `barage_barageuploaded` (`id`, `name`, `month`, `year`) VALUES
 -- Table structure for table `barage_barrages`
 --
 
-CREATE TABLE `barage_barrages` (
-  `id` int NOT NULL,
-  `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE IF NOT EXISTS `barage_barrages` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_barrages`
@@ -662,8 +687,8 @@ INSERT INTO `barage_barrages` (`id`, `name`) VALUES
 -- Table structure for table `barage_binouidanebilanhydr`
 --
 
-CREATE TABLE `barage_binouidanebilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_binouidanebilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -678,8 +703,9 @@ CREATE TABLE `barage_binouidanebilanhydr` (
   `volumeTurbine` double NOT NULL,
   `evc` double NOT NULL,
   `vf` double NOT NULL,
-  `volumeLache` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `volumeLache` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=876 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_binouidanebilanhydr`
@@ -783,8 +809,8 @@ INSERT INTO `barage_binouidanebilanhydr` (`id`, `annee`, `mois`, `jour`, `cote`,
 -- Table structure for table `barage_binouidanefornitures`
 --
 
-CREATE TABLE `barage_binouidanefornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_binouidanefornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `turbinageAfourer` double NOT NULL,
@@ -794,8 +820,9 @@ CREATE TABLE `barage_binouidanefornitures` (
   `TransfertMassira` double NOT NULL,
   `month` varchar(4) NOT NULL,
   `year` int NOT NULL,
-  `aport` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aport` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_binouidanefornitures`
@@ -816,15 +843,16 @@ INSERT INTO `barage_binouidanefornitures` (`id`, `periode`, `turbinage`, `turbin
 -- Table structure for table `barage_daouratefornitures`
 --
 
-CREATE TABLE `barage_daouratefornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_daouratefornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `aep` double NOT NULL,
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_daouratefornitures`
@@ -844,14 +872,15 @@ INSERT INTO `barage_daouratefornitures` (`id`, `periode`, `turbinage`, `aep`, `v
 -- Table structure for table `barage_diguesafifornitures`
 --
 
-CREATE TABLE `barage_diguesafifornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_diguesafifornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `aep` double NOT NULL,
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_diguesafifornitures`
@@ -871,8 +900,8 @@ INSERT INTO `barage_diguesafifornitures` (`id`, `periode`, `aep`, `vidPdev`, `mo
 -- Table structure for table `barage_hassanprembilanhydr`
 --
 
-CREATE TABLE `barage_hassanprembilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_hassanprembilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -887,8 +916,9 @@ CREATE TABLE `barage_hassanprembilanhydr` (
   `onep` double NOT NULL,
   `one` double NOT NULL,
   `vidFond` double NOT NULL,
-  `eCrue` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `eCrue` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=172 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -896,8 +926,8 @@ CREATE TABLE `barage_hassanprembilanhydr` (
 -- Table structure for table `barage_hassanpremfornitures`
 --
 
-CREATE TABLE `barage_hassanpremfornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_hassanpremfornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `aepiAzDem` double NOT NULL,
@@ -905,8 +935,9 @@ CREATE TABLE `barage_hassanpremfornitures` (
   `TransfertMassira` double NOT NULL,
   `month` varchar(4) NOT NULL,
   `year` int NOT NULL,
-  `aport` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aport` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_hassanpremfornitures`
@@ -925,8 +956,8 @@ INSERT INTO `barage_hassanpremfornitures` (`id`, `periode`, `turbinage`, `aepiAz
 -- Table structure for table `barage_imfoutfornitures`
 --
 
-CREATE TABLE `barage_imfoutfornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_imfoutfornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `irrigation` double NOT NULL,
@@ -934,8 +965,9 @@ CREATE TABLE `barage_imfoutfornitures` (
   `aepONEPDoukkala` double NOT NULL,
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_imfoutfornitures`
@@ -955,8 +987,8 @@ INSERT INTO `barage_imfoutfornitures` (`id`, `periode`, `turbinage`, `irrigation
 -- Table structure for table `barage_massirabilanhydr`
 --
 
-CREATE TABLE `barage_massirabilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_massirabilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -972,8 +1004,9 @@ CREATE TABLE `barage_massirabilanhydr` (
   `onep1` double NOT NULL,
   `onpe2` double NOT NULL,
   `vFond` double NOT NULL,
-  `evacCrue` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `evacCrue` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_massirabilanhydr`
@@ -1015,8 +1048,8 @@ INSERT INTO `barage_massirabilanhydr` (`id`, `annee`, `mois`, `jour`, `cote`, `r
 -- Table structure for table `barage_massirafornitures`
 --
 
-CREATE TABLE `barage_massirafornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_massirafornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `aepiRhamna` double NOT NULL,
@@ -1024,8 +1057,9 @@ CREATE TABLE `barage_massirafornitures` (
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
   `year` int NOT NULL,
-  `aport` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aport` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_massirafornitures`
@@ -1045,8 +1079,8 @@ INSERT INTO `barage_massirafornitures` (`id`, `periode`, `turbinage`, `aepiRhamn
 -- Table structure for table `barage_myyoussefbilanhydr`
 --
 
-CREATE TABLE `barage_myyoussefbilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_myyoussefbilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -1062,8 +1096,9 @@ CREATE TABLE `barage_myyoussefbilanhydr` (
   `v` double NOT NULL,
   `c` double NOT NULL,
   `one` double NOT NULL,
-  `vf` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `vf` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=458 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_myyoussefbilanhydr`
@@ -1105,8 +1140,8 @@ INSERT INTO `barage_myyoussefbilanhydr` (`id`, `annee`, `mois`, `jour`, `cote`, 
 -- Table structure for table `barage_myyousseffornitures`
 --
 
-CREATE TABLE `barage_myyousseffornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_myyousseffornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `turbinage` double NOT NULL,
   `irrigation` double NOT NULL,
@@ -1115,8 +1150,9 @@ CREATE TABLE `barage_myyousseffornitures` (
   `TransfertMassira` double NOT NULL,
   `month` varchar(4) NOT NULL,
   `year` int NOT NULL,
-  `aport` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `aport` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_myyousseffornitures`
@@ -1136,13 +1172,14 @@ INSERT INTO `barage_myyousseffornitures` (`id`, `periode`, `turbinage`, `irrigat
 -- Table structure for table `barage_sididaouifornitures`
 --
 
-CREATE TABLE `barage_sididaouifornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_sididaouifornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `aepAzemour` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_sididaouifornitures`
@@ -1162,8 +1199,8 @@ INSERT INTO `barage_sididaouifornitures` (`id`, `periode`, `aepAzemour`, `month`
 -- Table structure for table `barage_sididrissbilanhydr`
 --
 
-CREATE TABLE `barage_sididrissbilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_sididrissbilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `annee` int NOT NULL,
   `mois` int NOT NULL,
   `jour` int NOT NULL,
@@ -1178,8 +1215,9 @@ CREATE TABLE `barage_sididrissbilanhydr` (
   `oued` double NOT NULL,
   `canal` double NOT NULL,
   `vidFond` double NOT NULL,
-  `Desverse` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Desverse` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_sididrissbilanhydr`
@@ -1255,15 +1293,16 @@ INSERT INTO `barage_sididrissbilanhydr` (`id`, `annee`, `mois`, `jour`, `cote`, 
 -- Table structure for table `barage_sididrissfornitures`
 --
 
-CREATE TABLE `barage_sididrissfornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_sididrissfornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `Canal` double NOT NULL,
   `pmh` double NOT NULL,
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_sididrissfornitures`
@@ -1284,14 +1323,15 @@ INSERT INTO `barage_sididrissfornitures` (`id`, `periode`, `Canal`, `pmh`, `vidP
 -- Table structure for table `barage_ssmaachoufornitures`
 --
 
-CREATE TABLE `barage_ssmaachoufornitures` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_ssmaachoufornitures` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `aep` double NOT NULL,
   `vidPdev` double NOT NULL,
   `month` varchar(4) NOT NULL,
-  `year` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `year` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_ssmaachoufornitures`
@@ -1311,8 +1351,8 @@ INSERT INTO `barage_ssmaachoufornitures` (`id`, `periode`, `aep`, `vidPdev`, `mo
 -- Table structure for table `barage_suivibilan`
 --
 
-CREATE TABLE `barage_suivibilan` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_suivibilan` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `barage` varchar(40) NOT NULL,
   `suivi` varchar(40) NOT NULL,
@@ -1328,8 +1368,9 @@ CREATE TABLE `barage_suivibilan` (
   `jun` double NOT NULL,
   `jul` double NOT NULL,
   `aug` double NOT NULL,
-  `total` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `total` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1793 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_suivibilan`
@@ -1698,8 +1739,8 @@ INSERT INTO `barage_suivibilan` (`id`, `periode`, `barage`, `suivi`, `sep`, `oct
 -- Table structure for table `barage_timinoutinebilanhydr`
 --
 
-CREATE TABLE `barage_timinoutinebilanhydr` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_timinoutinebilanhydr` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `jour` int NOT NULL,
   `cote` double NOT NULL,
   `reserve` double NOT NULL,
@@ -1714,8 +1755,9 @@ CREATE TABLE `barage_timinoutinebilanhydr` (
   `volumeApp` double NOT NULL,
   `debitApp` double NOT NULL,
   `annee` int NOT NULL,
-  `mois` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `mois` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=203 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_timinoutinebilanhydr`
@@ -1757,8 +1799,8 @@ INSERT INTO `barage_timinoutinebilanhydr` (`id`, `jour`, `cote`, `reserve`, `var
 -- Table structure for table `barage_transfertmassira`
 --
 
-CREATE TABLE `barage_transfertmassira` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_transfertmassira` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `suivi` varchar(40) NOT NULL,
   `sep` double NOT NULL,
@@ -1773,8 +1815,9 @@ CREATE TABLE `barage_transfertmassira` (
   `jun` double NOT NULL,
   `jul` double NOT NULL,
   `aug` double NOT NULL,
-  `total` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `total` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=384 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_transfertmassira`
@@ -1806,8 +1849,8 @@ INSERT INTO `barage_transfertmassira` (`id`, `periode`, `suivi`, `sep`, `oct`, `
 -- Table structure for table `barage_varapport`
 --
 
-CREATE TABLE `barage_varapport` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `barage_varapport` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `periode` varchar(20) NOT NULL,
   `barage` varchar(40) NOT NULL,
   `sep` double NOT NULL,
@@ -1822,8 +1865,9 @@ CREATE TABLE `barage_varapport` (
   `jun` double NOT NULL,
   `jul` double NOT NULL,
   `aug` double NOT NULL,
-  `total` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `total` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barage_varapport`
@@ -1891,15 +1935,18 @@ INSERT INTO `barage_varapport` (`id`, `periode`, `barage`, `sep`, `oct`, `nov`, 
 -- Table structure for table `django_admin_log`
 --
 
-CREATE TABLE `django_admin_log` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `django_admin_log` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `action_time` datetime(6) NOT NULL,
   `object_id` longtext,
   `object_repr` varchar(200) NOT NULL,
   `action_flag` smallint UNSIGNED NOT NULL,
   `change_message` longtext NOT NULL,
   `content_type_id` int DEFAULT NULL,
-  `user_id` int NOT NULL
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `django_admin_log_content_type_id_c4bce8eb_fk_django_co` (`content_type_id`),
+  KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`)
 ) ;
 
 --
@@ -1920,11 +1967,13 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 -- Table structure for table `django_content_type`
 --
 
-CREATE TABLE `django_content_type` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `django_content_type` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `app_label` varchar(100) NOT NULL,
-  `model` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `model` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `django_content_type`
@@ -1973,12 +2022,13 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 -- Table structure for table `django_migrations`
 --
 
-CREATE TABLE `django_migrations` (
-  `id` int NOT NULL,
+CREATE TABLE IF NOT EXISTS `django_migrations` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `app` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `applied` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `applied` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `django_migrations`
@@ -2019,10 +2069,12 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 -- Table structure for table `django_session`
 --
 
-CREATE TABLE `django_session` (
+CREATE TABLE IF NOT EXISTS `django_session` (
   `session_key` varchar(40) NOT NULL,
   `session_data` longtext NOT NULL,
-  `expire_date` datetime(6) NOT NULL
+  `expire_date` datetime(6) NOT NULL,
+  PRIMARY KEY (`session_key`),
+  KEY `django_session_expire_date_a5c62663` (`expire_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -2038,489 +2090,6 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('tuyhxvp0nnetd1kdvwpuuwylx8bfcxjm', '.eJxVjEEOgjAQRe_StWnoMNDi0j1naGbaqUVNSSisjHcXEha6_e-9_1aetjX7rcrip6iuyqjL78YUnlIOEB9U7rMOc1mXifWh6JNWPc5RXrfT_TvIVPNeIxELAtqILkVjGjIDNwQYEMlJn7oeJCBYDjy0nFqx4ABkL5LrrKjPF-2UN_s:1lgoll:-3RopcrJR8OKp_C07s1ZXftJziY21lN_CCRsKuFbtNY', '2021-05-26 13:19:21.970277'),
 ('wysqhz5u8txl5nfkf0fo84y3dkkkufgv', '.eJxVjMsOwiAQAP-FsyE8VgSP3vsNZJcFqRqalPZk_HdD0oNeZybzFhH3rca95zXOLK7CiNMvI0zP3IbgB7b7ItPStnUmORJ52C6nhfPrdrR_g4q9ji1Y64BNKZnQgoLArFB70i4ln5QOaJCLBxuMKRCoaBcuWiuvAlM6i88X3kY3lQ:1ldYhW:GSm4Ee3q8HLGMmMcxfuU8EM9MLYuce07iENuS3-zolc', '2021-05-17 13:33:30.210205'),
 ('ya5v4319fxyx7wjzfzj4ykr3j9kva2nh', 'e30:1lU7wf:OgS6y8bt1yYbOy5BIXwhXpszidtsSmh17BvztYb2feI', '2021-04-21 13:10:09.066382');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `auth_group`
---
-ALTER TABLE `auth_group`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
-
---
--- Indexes for table `auth_group_permissions`
---
-ALTER TABLE `auth_group_permissions`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
-  ADD KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`);
-
---
--- Indexes for table `auth_permission`
---
-ALTER TABLE `auth_permission`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`);
-
---
--- Indexes for table `auth_user`
---
-ALTER TABLE `auth_user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
--- Indexes for table `auth_user_groups`
---
-ALTER TABLE `auth_user_groups`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
-  ADD KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`);
-
---
--- Indexes for table `auth_user_user_permissions`
---
-ALTER TABLE `auth_user_user_permissions`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` (`user_id`,`permission_id`),
-  ADD KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`);
-
---
--- Indexes for table `barage_aelhanssalibilanhydr`
---
-ALTER TABLE `barage_aelhanssalibilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_aelhanssalifornitures`
---
-ALTER TABLE `barage_aelhanssalifornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_aitmessaoudbilanhydr`
---
-ALTER TABLE `barage_aitmessaoudbilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_aitmessaoudfornitures`
---
-ALTER TABLE `barage_aitmessaoudfornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_apportmbinouidane`
---
-ALTER TABLE `barage_apportmbinouidane`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_apportmcomplexhansalimassira`
---
-ALTER TABLE `barage_apportmcomplexhansalimassira`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_apportmhassanprem`
---
-ALTER TABLE `barage_apportmhassanprem`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_apportmmoulayyoussef`
---
-ALTER TABLE `barage_apportmmoulayyoussef`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_barageuploaded`
---
-ALTER TABLE `barage_barageuploaded`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_barrages`
---
-ALTER TABLE `barage_barrages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_binouidanebilanhydr`
---
-ALTER TABLE `barage_binouidanebilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_binouidanefornitures`
---
-ALTER TABLE `barage_binouidanefornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_daouratefornitures`
---
-ALTER TABLE `barage_daouratefornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_diguesafifornitures`
---
-ALTER TABLE `barage_diguesafifornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_hassanprembilanhydr`
---
-ALTER TABLE `barage_hassanprembilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_hassanpremfornitures`
---
-ALTER TABLE `barage_hassanpremfornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_imfoutfornitures`
---
-ALTER TABLE `barage_imfoutfornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_massirabilanhydr`
---
-ALTER TABLE `barage_massirabilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_massirafornitures`
---
-ALTER TABLE `barage_massirafornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_myyoussefbilanhydr`
---
-ALTER TABLE `barage_myyoussefbilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_myyousseffornitures`
---
-ALTER TABLE `barage_myyousseffornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_sididaouifornitures`
---
-ALTER TABLE `barage_sididaouifornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_sididrissbilanhydr`
---
-ALTER TABLE `barage_sididrissbilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_sididrissfornitures`
---
-ALTER TABLE `barage_sididrissfornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_ssmaachoufornitures`
---
-ALTER TABLE `barage_ssmaachoufornitures`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_suivibilan`
---
-ALTER TABLE `barage_suivibilan`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_timinoutinebilanhydr`
---
-ALTER TABLE `barage_timinoutinebilanhydr`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_transfertmassira`
---
-ALTER TABLE `barage_transfertmassira`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `barage_varapport`
---
-ALTER TABLE `barage_varapport`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `django_admin_log`
---
-ALTER TABLE `django_admin_log`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `django_admin_log_content_type_id_c4bce8eb_fk_django_co` (`content_type_id`),
-  ADD KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`);
-
---
--- Indexes for table `django_content_type`
---
-ALTER TABLE `django_content_type`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`);
-
---
--- Indexes for table `django_migrations`
---
-ALTER TABLE `django_migrations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `django_session`
---
-ALTER TABLE `django_session`
-  ADD PRIMARY KEY (`session_key`),
-  ADD KEY `django_session_expire_date_a5c62663` (`expire_date`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `auth_group`
---
-ALTER TABLE `auth_group`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `auth_group_permissions`
---
-ALTER TABLE `auth_group_permissions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `auth_permission`
---
-ALTER TABLE `auth_permission`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
-
---
--- AUTO_INCREMENT for table `auth_user`
---
-ALTER TABLE `auth_user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `auth_user_groups`
---
-ALTER TABLE `auth_user_groups`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `auth_user_user_permissions`
---
-ALTER TABLE `auth_user_user_permissions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `barage_aelhanssalibilanhydr`
---
-ALTER TABLE `barage_aelhanssalibilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=293;
-
---
--- AUTO_INCREMENT for table `barage_aelhanssalifornitures`
---
-ALTER TABLE `barage_aelhanssalifornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `barage_aitmessaoudbilanhydr`
---
-ALTER TABLE `barage_aitmessaoudbilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
-
---
--- AUTO_INCREMENT for table `barage_aitmessaoudfornitures`
---
-ALTER TABLE `barage_aitmessaoudfornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `barage_apportmbinouidane`
---
-ALTER TABLE `barage_apportmbinouidane`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `barage_apportmcomplexhansalimassira`
---
-ALTER TABLE `barage_apportmcomplexhansalimassira`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `barage_apportmhassanprem`
---
-ALTER TABLE `barage_apportmhassanprem`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `barage_apportmmoulayyoussef`
---
-ALTER TABLE `barage_apportmmoulayyoussef`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `barage_barageuploaded`
---
-ALTER TABLE `barage_barageuploaded`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
-
---
--- AUTO_INCREMENT for table `barage_barrages`
---
-ALTER TABLE `barage_barrages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `barage_binouidanebilanhydr`
---
-ALTER TABLE `barage_binouidanebilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=876;
-
---
--- AUTO_INCREMENT for table `barage_binouidanefornitures`
---
-ALTER TABLE `barage_binouidanefornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
-
---
--- AUTO_INCREMENT for table `barage_daouratefornitures`
---
-ALTER TABLE `barage_daouratefornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `barage_diguesafifornitures`
---
-ALTER TABLE `barage_diguesafifornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `barage_hassanprembilanhydr`
---
-ALTER TABLE `barage_hassanprembilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
-
---
--- AUTO_INCREMENT for table `barage_hassanpremfornitures`
---
-ALTER TABLE `barage_hassanpremfornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `barage_imfoutfornitures`
---
-ALTER TABLE `barage_imfoutfornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `barage_massirabilanhydr`
---
-ALTER TABLE `barage_massirabilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
-
---
--- AUTO_INCREMENT for table `barage_massirafornitures`
---
-ALTER TABLE `barage_massirafornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `barage_myyoussefbilanhydr`
---
-ALTER TABLE `barage_myyoussefbilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
-
---
--- AUTO_INCREMENT for table `barage_myyousseffornitures`
---
-ALTER TABLE `barage_myyousseffornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `barage_sididaouifornitures`
---
-ALTER TABLE `barage_sididaouifornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `barage_sididrissbilanhydr`
---
-ALTER TABLE `barage_sididrissbilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
-
---
--- AUTO_INCREMENT for table `barage_sididrissfornitures`
---
-ALTER TABLE `barage_sididrissfornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `barage_ssmaachoufornitures`
---
-ALTER TABLE `barage_ssmaachoufornitures`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `barage_suivibilan`
---
-ALTER TABLE `barage_suivibilan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1793;
-
---
--- AUTO_INCREMENT for table `barage_timinoutinebilanhydr`
---
-ALTER TABLE `barage_timinoutinebilanhydr`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=203;
-
---
--- AUTO_INCREMENT for table `barage_transfertmassira`
---
-ALTER TABLE `barage_transfertmassira`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=384;
-
---
--- AUTO_INCREMENT for table `barage_varapport`
---
-ALTER TABLE `barage_varapport`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
-
---
--- AUTO_INCREMENT for table `django_admin_log`
---
-ALTER TABLE `django_admin_log`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `django_content_type`
---
-ALTER TABLE `django_content_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
-
---
--- AUTO_INCREMENT for table `django_migrations`
---
-ALTER TABLE `django_migrations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
