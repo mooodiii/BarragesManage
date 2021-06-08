@@ -1,0 +1,51 @@
+.nav {
+    margin: 5% 5%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav button {
+    margin: 0;
+}
+
+.guide {
+    width: 100%;
+}
+
+.btnM{
+    font-size: 18px
+}
+
+.container {
+    width: 100%;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container img {
+    width: 90%;
+}
+
+.guide h1 {
+    text-align: left;
+    margin-left: 10%;
+    color: rgb(209, 0, 0);
+}
+
+.container img,
+p,
+h2 {
+    margin: 2% 0;
+}
+
+p {
+    font-size: 1.2em;
+    text-align: left;
+}
+
+.boldNav {
+    font-weight: bold;
+    margin-left: 0;
+}

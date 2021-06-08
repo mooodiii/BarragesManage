@@ -3,6 +3,8 @@ import {FichierData} from './fichierData'
 import { Link, Redirect } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
 import RiseLoader from 'react-spinners/RiseLoader';
+import { SiMicrosoftexcel } from "react-icons/si";
+import { FaRegFilePdf, FaFileCsv } from "react-icons/fa";
 
 
 class SuiviBilan extends React.Component  {
@@ -179,9 +181,9 @@ class SuiviBilan extends React.Component  {
         
         { this.state.show ? 
         <div>
-          <button className="btn"><a href={`/APIs/exportCSV/${this.state.periode}`}>Export CSV</a></button>
-          <button className="btn"><a href={`/APIs/exportPDF/${this.state.periode}`}>Export PDF</a></button>
-          <button className="btn"><a href={`/APIs/exportEXCEL/${this.state.periode}`}>Export EXCEL</a></button>
+          <button className="btn"><a href={`/APIs/exportCSV/${this.state.periode}`}><FaFileCsv /> Export CSV</a></button>
+          <button className="btn"><a href={`/APIs/exportPDF/${this.state.periode}`}><FaRegFilePdf /> Export PDF</a></button>
+          <button className="btn"><a href={`/APIs/exportEXCEL/${this.state.periode}`}><SiMicrosoftexcel /> Export EXCEL</a></button>
       </div>
       : null }
       </div>

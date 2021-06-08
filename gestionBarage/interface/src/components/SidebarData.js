@@ -1,6 +1,9 @@
 import React from 'react';
 import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
+import { ImBooks } from "react-icons/im";
+import { BiLogOut } from "react-icons/bi";
+
 
 
 
@@ -32,9 +35,15 @@ export const SidebarData = [{
         cName: 'nav-text'
     },
     {
+        title: 'Guide d\'utilisation',
+        path: '/guide',
+        icon: < ImBooks / > ,
+        cName: 'nav-text'
+    },
+    {
         title: 'Log out',
         path: '/logout',
-        icon: < AiIcons.AiFillHome / > ,
+        icon: < BiLogOut / > ,
         cName: 'nav-text'
     },
 

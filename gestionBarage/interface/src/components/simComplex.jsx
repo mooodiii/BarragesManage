@@ -5,6 +5,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
+
 class SimComplex extends React.Component{
     constructor(props){
         super(props);
@@ -335,11 +336,11 @@ class SimComplex extends React.Component{
             <div  className="sim">
             <ReactHTMLTableToExcel
                     id="test-table-xls-button"
-                    className="download-table-xls-button"
+                    className="downloadXls"
                     table="table-to-xls"
                     filename="tablexls"
                     sheet="simulation Bin Ouidane"
-                    buttonText="Exporter fichier Excel"/>
+                    buttonText="Exporter comme fichier excel" />
                 <table className="table">
                     <thead>
                         <tr>

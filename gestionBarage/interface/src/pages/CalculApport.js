@@ -170,7 +170,7 @@ class CalculApport extends React.Component {
                         }
                     }
                     this.setState({
-                      result: somme
+                      result: somme.toFixed(2)
                     })
                     if(this.state.barage === 'Complexe A.El Hansali-Massira'){
                       this.setState({

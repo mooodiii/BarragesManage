@@ -4,7 +4,8 @@ import {GestionBarrageData} from './GestionBarrageData';
 import { Link } from 'react-router-dom';
 import SimComplex from '../components/simComplex'
 import SimBinOuidane from '../components/simBinOuidane'
-import SimMyYoussef from '../components/simMyYoussef'
+import SimMyYoussef from '../components/simMyYoussef';
+import { FcDam } from "react-icons/fc";
 
 
 class Simulation extends React.Component {
@@ -39,9 +40,9 @@ class Simulation extends React.Component {
                 })}
         </ul>
         <div style={{textAlign : "center"}}>
-            <button name="binOuidane" onClick={this.ShowHide}>Bin Ouidane</button>
-            <button name="complex" onClick={this.ShowHide}>Complexe al Hansali-Al Massira</button>
-            <button name="youssef" onClick={this.ShowHide}>My Youssef</button>
+            <button name="binOuidane" onClick={this.ShowHide}><FcDam /> Bin Ouidane</button>
+            <button name="complex" onClick={this.ShowHide}><FcDam /> Complexe al Hansali-Al Massira</button>
+            <button name="youssef" onClick={this.ShowHide}><FcDam /> My Youssef</button>
         </div>
         {this.state.show === "binOuidane" ?
          <div> <SimBinOuidane /> </div> : 

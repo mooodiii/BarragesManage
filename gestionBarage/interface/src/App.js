@@ -11,6 +11,7 @@ import importFile from './pages/importFile';
 import SuiviBilan from './pages/SuiviBilan';
 import submitData from './pages/submitData';
 import tableau from './pages/tableau';
+import guide from './pages/guide';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path='/Fichier/import' component={importFile} />
           <Route path='/Fichier/SuiviBilan' component={SuiviBilan} />
           <Route path='/Fichier/submitData' component={submitData} />
+          <Route path='/Guide' exact component={guide} />
         </Switch>
       </Router>
     </>

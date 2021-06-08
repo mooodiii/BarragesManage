@@ -5,6 +5,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
+
 class SimMyYoussef extends React.Component{
     constructor(props){
         super(props);
@@ -113,7 +114,7 @@ class SimMyYoussef extends React.Component{
                         app98: this.calcApport(data98),
                     })
                 }else{
-                    alert('there is no data for the periode you entred, try with other month')
+                    alert("Il n'y a pas de données pour la période que vous avez saisie, essayez avec un autre mois de début")
                 }
               })
       }
@@ -232,11 +233,11 @@ class SimMyYoussef extends React.Component{
             <div  className="sim" >
             <ReactHTMLTableToExcel
                     id="test-table-xls-button"
-                    className="download-table-xls-button"
+                    className="downloadXls"
                     table="table-to-xls"
                     filename="tablexls"
                     sheet="simulation Moulay Youssef"
-                    buttonText="Exporter fichier Excel"/>
+                    buttonText="Exporter comme fichier Excel"/>
 
                 <table className="table">
                     <thead>
