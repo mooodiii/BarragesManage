@@ -18,7 +18,7 @@ class SimComplex extends React.Component{
             sign: 0,
             value:new Date(),
             reserveH: "",
-            evapH:"",
+            evapH:0,
             irrRealiseH : 0,
             irrResteH: 0,
             irrTotalH: "",
@@ -38,7 +38,7 @@ class SimComplex extends React.Component{
             app95H:"",
             app90H:"",
             reserveM: "",
-            evapM:"",
+            evapM:0,
             irrRealiseM : 0,
             irrResteM: 0,
             irrTotalM: "",
@@ -128,7 +128,7 @@ class SimComplex extends React.Component{
         let reserve = [startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()]
         let evap = [[startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()], [endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate()]]
 
-        fetch(`/APIs/simulation`, {
+        fetch(`http://127.0.0.1:8000/APIs/simulation`, {
                   method: 'POST',
                   headers:{
                     'content-type': 'application/json',
@@ -142,7 +142,7 @@ class SimComplex extends React.Component{
               })
               .then(Response => Response.json())
               .then(data => {
-                    console.log(data);
+                    
                     if (data.error === false){
                         let data99 = data.serializer99
                         let data98 = data.serializer98
@@ -150,25 +150,25 @@ class SimComplex extends React.Component{
                         let data90 = data.serializer90
                         this.setState({
                             reserveM: data.reserveResult.massira,
-                            evapM: data.evap.massira,
+                            
                             reserveH: data.reserveResult.hansali,
-                            evapH: data.evap.hansali,
-                            app90C: this.calcApport(data90),
-                            app99C: this.calcApport(data99),
-                            app95C: this.calcApport(data95),
-                            app98C: this.calcApport(data98),
+                            
+                            app90C: this.calcApport(data90).toFixed(2),
+                            app99C: this.calcApport(data99).toFixed(2),
+                            app95C: this.calcApport(data95).toFixed(2),
+                            app98C: this.calcApport(data98).toFixed(2),
                         }, () =>{
                             this.setState({
                                     reserveC: parseFloat(this.state.reserveH) + parseFloat(this.state.reserveM),
                                     evapC: parseFloat(this.state.evapH) + parseFloat(this.state.evapM),
-                                    app90M: this.state.app90C  * (2/3),
-                                    app99M: this.state.app99C * (2/3),
-                                    app95M: this.state.app95C * (2/3),
-                                    app98M: this.state.app98C * (2/3),
-                                    app90H: this.state.app90C  * (1/3),
-                                    app99H: this.state.app99C * (1/3),
-                                    app95H: this.state.app95C * (1/3),
-                                    app98H: this.state.app98C * (1/3),
+                                    app90M: this.state.app90C  * (1/3),
+                                    app99M: this.state.app99C * (1/3),
+                                    app95M: this.state.app95C * (1/3),
+                                    app98M: this.state.app98C * (1/3),
+                                    app90H: this.state.app90C  * (2/3),
+                                    app99H: this.state.app99C * (2/3),
+                                    app95H: this.state.app95C * (2/3),
+                                    app98H: this.state.app98C * (2/3),
                             })
                         })
                     }else{
@@ -181,10 +181,13 @@ class SimComplex extends React.Component{
         
         this.setState({
             [e.target.name] : e.target.value,
+            
         }, () =>{
             this.setState({
                 irrTotalM : parseFloat(this.state.irrRealiseM) + parseFloat(this.state.irrResteM),
                 irrTotalH : parseFloat(this.state.irrRealiseH) + parseFloat(this.state.irrResteH),
+                evapC: parseFloat(this.state.evapH) + parseFloat(this.state.evapM),
+                reserveC: parseFloat(this.state.reserveH) + parseFloat(this.state.reserveM),
             })
             //massira
             let esResult99M = parseFloat(this.state.reserveM) + parseFloat(this.state.app99M) - parseFloat(this.state.evapM) - ((this.state.irrResteM + this.state.aepiResteM) / 0.75 ) + this.state.debitSanitaireM + this.state.transfertM

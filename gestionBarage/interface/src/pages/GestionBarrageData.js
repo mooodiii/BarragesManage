@@ -1,7 +1,7 @@
 
 
 export const GestionBarrageData = [{
-        title: "Calcul d'Apport",
+        title: "Statistique",
         path: '/gestionBarrage/CalculApport',
         cName: 'nav-text',
         idd: 'navBar'

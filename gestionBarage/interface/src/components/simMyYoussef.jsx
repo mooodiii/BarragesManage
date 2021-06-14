@@ -85,7 +85,7 @@ class SimMyYoussef extends React.Component{
         let reserve = [startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()]
         let evap = [[startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate()], [endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate()]]
 
-        fetch(`/APIs/simulation`, {
+        fetch(`http://127.0.0.1:8000/APIs/simulation`, {
                   method: 'POST',
                   headers:{
                     'content-type': 'application/json',
@@ -93,25 +93,28 @@ class SimMyYoussef extends React.Component{
                   },
                   body: JSON.stringify({
                       reserve: reserve,
-                      evap: evap,
                       barage: "youssef"
                   })
               })
               .then(Response => Response.json())
               .then(data => {
                   console.log(data);
-                  if (data.error === false){
                     let data99 = data.serializer99
                     let data98 = data.serializer98
                     let data95 = data.serializer95
                     let data90 = data.serializer90
                     this.setState({
+                        app90: this.calcApport(data90).toFixed(2),
+                        app99: this.calcApport(data99).toFixed(2),
+                        app95: this.calcApport(data95).toFixed(2),
+                        app98: this.calcApport(data98).toFixed(2),
+                    })
+                  if (data.error === false){
+                    
+                    this.setState({
                         reserve: data.reserveResult,
-                        evap: data.evap,
-                        app90: this.calcApport(data90),
-                        app99: this.calcApport(data99),
-                        app95: this.calcApport(data95),
-                        app98: this.calcApport(data98),
+                        
+                        
                     })
                 }else{
                     alert("Il n'y a pas de données pour la période que vous avez saisie, essayez avec un autre mois de début")

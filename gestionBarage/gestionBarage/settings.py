@@ -152,8 +152,7 @@ STATIC_URL = '/static/'
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'login/build/static'),
     os.path.join(BASE_DIR, 'interface/build/static')
 ]
 
-STATIC_ROOT= os.path.join(BASE_DIR,'staticfile')
+STATIC_ROOT= os.path.join(BASE_DIR,'static')

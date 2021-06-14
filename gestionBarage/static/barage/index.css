@@ -1,0 +1,77 @@
+#root {
+    margin: 0;
+    padding: 0;
+}
+
+.App {
+    font-family: sans-serif;
+    margin: auto;
+    transform: translateY(10%);
+    border: 1px solid #dadce0;
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
+    max-width: 450px;
+    flex-direction: column;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+label,
+input {
+    display: block;
+    width: 350px;
+}
+
+label {
+    margin-bottom: 5px;
+    height: 22px;
+    border-radius: 10px;
+}
+
+input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 50px;
+    border: 1px solid #777;
+}
+
+input.error {
+    border-color: red;
+}
+
+#email-feedback,
+#password-feedback,
+#message {
+    color: rgb(235, 54, 54);
+    margin-top: -15px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+#submiiit {
+    margin: 20px auto;
+    width: 100px;
+    padding: 10px 30px;
+    border: 1px solid #333;
+    border-radius: 50px;
+    background-color: #ddd;
+    color: #333;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+#submiiit:hover {
+    cursor: pointer;
+    background-color: white;
+    color: rgb(70, 153, 179);
+}

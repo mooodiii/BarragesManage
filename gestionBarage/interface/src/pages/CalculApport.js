@@ -4,13 +4,17 @@ import {GestionBarrageData} from './GestionBarrageData';
 import { Link } from 'react-router-dom';
 
 class CalculApport extends React.Component {
+
+  
   constructor(props){
     super(props);
     this.state = {
       barageList : [],
       freqList: [],
-      startDate: "2020-09-01",
-      endDate: "2020-09-01",
+      startDate: `${this.Year - 1}-09-01`,
+      endDate: `${this.Year}-09-01`,
+      first: "",
+      end: "",
       barage: "",
       freq: "99",
       result : "",
@@ -18,7 +22,7 @@ class CalculApport extends React.Component {
       complex : "",
       complex2 : "",
     }
-    
+    this.Year = new Date().getFullYear()  
     this.fetchDataBarage = this.fetchDataBarage.bind(this)
     this.handleChancgeBarage = this.handleChancgeBarage.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -52,18 +56,19 @@ class CalculApport extends React.Component {
 
   SetDate(){
     const d = new Date();
-    let day = d.getDate()
-    let month = d.getMonth()
+    
+    let month = d.getMonth() + 1
     let year = d.getFullYear()
-    if (day < 10) {
-        day = `0${day}`
+    if (month >= 9 && month <= 12){
+      year = year + 1
     }
     if (month < 10) {
         month = `0${month}`
     }
+    
     this.setState({
-      startDate : `${year}-${month}-${day}`,
-      endDate : `${year}-${month}-${day}`,
+      first : `${year - 1}-09-01`,
+      end : `${year}-08-31`,
   })
   }
 
@@ -120,7 +125,7 @@ class CalculApport extends React.Component {
                 return Response.json();
             })
             .then(data => {
-                console.log('gggggg' + data);
+                
                     const d = new Date();
                     const dataMonth = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
                     let dataJperM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -205,15 +210,15 @@ class CalculApport extends React.Component {
   }
   
   handleClickHansali(){
-    let result = this.state.result * (1/3);
+    let result = this.state.result * (2/3);
     this.setState({
-      resultComplex: result
+      resultComplex: result.toFixed(2)
     })
   }
   handleClickMassira(){
-    let result = this.state.result * (2/3);
+    let result = this.state.result * (1/3);
     this.setState({
-      resultComplex: result
+      resultComplex: result.toFixed(2)
     })
   }
 
@@ -226,6 +231,7 @@ class CalculApport extends React.Component {
     <option key={item} value={item}>{item}</option>
     );
 
+    
     
     return (
         <>
@@ -261,12 +267,12 @@ class CalculApport extends React.Component {
           <div>
               <label for="start">date de debut:</label>
 
-              <input type="date" className="baragList"  id="start" min="2020-09-01" max="2021-08-31" value={this.state.startDate} onChange={this.changeDebutDate}></input>
+              <input type="date" className="baragList"  id="start" min={this.state.first} max={this.state.end} value={this.state.startDate} onChange={this.changeDebutDate}></input>
           </div>
           <div>
               <label for="end">date de fin:</label>
 
-              <input type="date" className="baragList" id="end" min={this.state.startDate} max="2021-08-31" value={this.state.endDate} onChange={this.changeEndDate}/>
+              <input type="date" className="baragList" id="end" min={this.state.startDate} max={this.state.end} value={this.state.endDate} onChange={this.changeEndDate}/>
           </div>
           <div id="result">
               <label for="result">Resultat:</label>

@@ -1693,7 +1693,7 @@ def checkData(request):
 
 @api_view(['GET'])
 def periode(request):
-    suivibilan=SuiviBilan.objects.all().values('periode').distinct()
+    suivibilan=SuiviBilan.objects.all().values('periode').distinct().order_by('-periode')
 
     return Response(suivibilan)
 
@@ -1763,30 +1763,19 @@ def getSimulation(request):
         data = json.loads(data)
         if data.get("reserve") is not None:
             reserve=data["reserve"]
-        if data.get("evap") is not None:
-            evap=data["evap"]
         if data.get("barage") is not None:
             barage=data["barage"]
         
-        first = evap[0]
-        end = evap[1]
         
         if barage == "binOuidane":
             barageR = BinOuidaneBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
             if len(barageR) < 1:
-                return Response({'error' : True})
-            barageR = barageR.get()
-            barageE = BinOuidaneBilanHydr.objects.all()
+                reserveResult = 0
+            else:
+                barageR = barageR.get()
+                reserveResult = barageR.reserve
 
-
-            reserveResult = barageR.reserve
-
-            result = 0
-            for b in barageE:
-                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
-                    result += float(b.evaporation)
-                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
-                    break
+            
             
             apport99 = ApportMBinouidane.objects.get(freq=99)
             serializer99 = AppBinouidaneSerialize(apport99, many=False)
@@ -1800,19 +1789,12 @@ def getSimulation(request):
         elif barage == "youssef":
             barageR = MyYoussefBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
             if len(barageR) < 1:
-                return Response({'error' : True})
-            barageR = barageR.get()
-            barageE = MyYoussefBilanHydr.objects.all()
+                reserveResult = 0
+            else:
+                barageR = barageR.get()
+                reserveResult = barageR.reserve
 
-
-            reserveResult = barageR.reserve
-
-            result = 0
-            for b in barageE:
-                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
-                    result += float(b.evaporation)
-                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
-                    break
+            
             
             apport99 = ApportMmoulayYoussef.objects.get(freq=99)
             serializer99 = AppmoulayYoussefSerialize(apport99, many=False)
@@ -1827,36 +1809,22 @@ def getSimulation(request):
             #massira
             barageRMassira = MassiraBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
             if len(barageRMassira) < 1:
-                return Response({'error' : True})
-            barageRMassira = barageRMassira.get()
-            barageEMassira = MassiraBilanHydr.objects.all()
+                reserveResultM = 0
+            else:
+                barageRMassira = barageRMassira.get()
+                reserveResultM = barageRMassira.reserve
 
-
-            reserveResultM = barageRMassira.reserve
-
-            resultM = 0
-            for b in barageEMassira:
-                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
-                    resultM += float(b.evaporation)
-                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
-                    break
+            
 
             #hansali
             barageRhansali = AelHanssaliBilanHydr.objects.filter(annee = int(reserve[0]), mois = int(reserve[1]), jour = int(reserve[2]))
             if len(barageRhansali) < 1:
-                return Response({'error' : True})
-            barageRhansali = barageRhansali.get()
-            barageEhansali = AelHanssaliBilanHydr.objects.all()
+                reserveResultH = 0
+            else:
+                barageRhansali = barageRhansali.get()
+                reserveResultH = barageRhansali.reserve
 
-
-            reserveResultH = barageRhansali.reserve
-
-            resultH = 0
-            for b in barageEhansali:
-                if b.annee == first[0] and b.jour >= first[2] and b.mois >= first[1]:
-                    resultH += float(b.evaporation)
-                if b.annee == end[0] and b.jour == end[2] and b.mois == end[1]:
-                    break
+            
             
             apport99 = ApportMComplexHansaliMassira.objects.get(freq=99)
             serializer99 = AppHansaliMassiraSerialize(apport99, many=False)
@@ -1869,8 +1837,7 @@ def getSimulation(request):
 
             return Response({
                 "error": False,
-                "reserveResult": { "massira" : round(reserveResultM, 2), "hansali" : round(reserveResultH, 2),}, 
-                "evap": {"massira" : round(resultM, 2) , "hansali" : round(resultH, 2)} ,
+                "reserveResult": { "massira" : round(reserveResultM, 2), "hansali" : round(reserveResultH, 2),},
                 "serializer99": serializer99.data,
                 "serializer98": serializer98.data,
                 "serializer95": serializer95.data,
@@ -1881,7 +1848,6 @@ def getSimulation(request):
         return Response({
             "error": False,
             "reserveResult": round(reserveResult, 2), 
-            "evap": round(result, 2) ,
             "serializer99": serializer99.data,
             "serializer98": serializer98.data,
             "serializer95": serializer95.data,

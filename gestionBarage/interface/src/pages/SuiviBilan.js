@@ -18,7 +18,8 @@ class SuiviBilan extends React.Component  {
       show : false,
       periode:"",
       wait: true,
-      redirect:false
+      redirect:false,
+      allow: false
     }
     this.fetchData = this.fetchData.bind(this)
     this.getData = this.getData.bind(this)
@@ -56,7 +57,7 @@ class SuiviBilan extends React.Component  {
         wait: false,
         redirect: data['redirect']
       })
-      console.log('fetchiiiiing')
+      
       fetch('/APIs/periode')
       .then(Response => Response.json())
       .then(data =>{
@@ -73,6 +74,23 @@ class SuiviBilan extends React.Component  {
   }
 
   getData(e){
+    let periode = e.target.value.split("-");
+    let periode2 = periode[0];
+    periode = periode[1];
+    let thisYear = new Date();
+    thisYear = thisYear.getFullYear();
+    if (periode >= thisYear && periode2 < thisYear){
+      
+      this.setState({
+        allow : true
+      })
+    }
+    else{
+      this.setState({
+        allow : false
+      })
+    }
+    
     this.setState({
       periode: e.target.value,
       data : [],
@@ -123,8 +141,7 @@ class SuiviBilan extends React.Component  {
               })
               .then(Response => Response.json())
               .then(data => {
-                console.log(data)
-                
+                console.log()
               })
       })
   } else {
@@ -134,6 +151,9 @@ class SuiviBilan extends React.Component  {
 
 
   render(){
+    
+    
+
     if (this.state.redirect) {
       //Affichage de la redirection
       return <Redirect to='/Fichier/import'/>;
@@ -211,68 +231,117 @@ class SuiviBilan extends React.Component  {
               </thead>
               <tbody>
                 {this.state.data.map(item => {
-                  if (item.suivi === 'Transfert Massira')
-                  {
+                  if (this.state.allow){
+                    if (item.suivi === 'Transfert Massira')
+                      {
+                        
+                        return (
+                          <tr className='massira'>
+                            <td>{item.barage}</td>
+                            <td>{item.suivi}</td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="sep" defaultValue={item.sep} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="oct" defaultValue={item.oct} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="nov" defaultValue={item.nov} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="dec" defaultValue={item.dec} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="jan" defaultValue={item.jan} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="feb" defaultValue={item.feb} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="mar" defaultValue={item.mar} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="apr" defaultValue={item.apr} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="may" defaultValue={item.may} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="jun" defaultValue={item.jun} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="jul" defaultValue={item.jul} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="aug" defaultValue={item.aug} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="total" defaultValue={item.total.toFixed(2)} onBlur={this.handleChangeValues}></input></td>
+                          </tr>
+                        )
+                      }
+                      else{
+                      return (
+                        <tr>
+                          <td>{item.barage}</td>
+                            <td>{item.suivi}</td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="sep" defaultValue={item.sep} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="oct" defaultValue={item.oct} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="nov" defaultValue={item.nov} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="dec" defaultValue={item.dec} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="jan" defaultValue={item.jan} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="feb" defaultValue={item.feb} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="mar" defaultValue={item.mar} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="apr" defaultValue={item.apr} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="may" defaultValue={item.may} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="jun" defaultValue={item.jun} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="jul" defaultValue={item.jul} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="aug" defaultValue={item.aug} onBlur={this.handleChangeValues}></input></td>
+                            <td><input type="number" className="numbers" id={item["id"]} name="total" defaultValue={item.total.toFixed(2)} onBlur={this.handleChangeValues}></input></td>
+                        </tr>
+                      )
+                    }
+                  }
+                  else{
+                    if (item.suivi === 'Transfert Massira')
+                    {
+                      return (
+                        <tr className='massira'>
+                          <td>{item.barage}</td>
+                          <td>{item.suivi}</td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="sep" readOnly value={item.sep} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="oct" readOnly value={item.oct} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="nov" readOnly value={item.nov} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="dec" readOnly value={item.dec} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="jan" readOnly value={item.jan} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="feb" readOnly value={item.feb} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="mar" readOnly value={item.mar} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="apr" readOnly value={item.apr} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="may" readOnly value={item.may} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="jun" readOnly value={item.jun} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="jul" readOnly value={item.jul} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="aug" readOnly value={item.aug} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="total" readOnly value={item.total.toFixed(2)} onBlur={this.handleChangeValues}></input></td>
+                        </tr>
+                      )
+                    }
+                    else{
                     return (
-                      <tr className='massira'>
+                      <tr>
                         <td>{item.barage}</td>
-                        <td>{item.suivi}</td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="sep" defaultValue={item.sep} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="oct" defaultValue={item.oct} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="nov" defaultValue={item.nov} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="dec" defaultValue={item.dec} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jan" defaultValue={item.jan} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="feb" defaultValue={item.feb} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="mar" defaultValue={item.mar} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="apr" defaultValue={item.apr} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="may" defaultValue={item.may} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jun" defaultValue={item.jun} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jul" defaultValue={item.jul} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="aug" defaultValue={item.aug} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="total" defaultValue={item.total.toFixed(2)} onBlur={this.handleChangeValues}></input></td>
+                          <td>{item.suivi}</td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="sep" readOnly value={item.sep} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="oct" readOnly value={item.oct} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="nov" readOnly value={item.nov} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="dec" readOnly value={item.dec} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="jan" readOnly value={item.jan} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="feb" readOnly value={item.feb} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="mar" readOnly value={item.mar} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="apr" readOnly value={item.apr} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="may" readOnly value={item.may} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="jun" readOnly value={item.jun} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="jul" readOnly value={item.jul} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="aug" readOnly value={item.aug} onBlur={this.handleChangeValues}></input></td>
+                          <td><input type="number" className="numbers" id={item["id"]} name="total" readOnly value={item.total.toFixed(2)} onBlur={this.handleChangeValues}></input></td>
                       </tr>
                     )
                   }
-                  else{
-                  return (
-                    <tr>
-                      <td>{item.barage}</td>
-                        <td>{item.suivi}</td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="sep" defaultValue={item.sep} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="oct" defaultValue={item.oct} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="nov" defaultValue={item.nov} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="dec" defaultValue={item.dec} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jan" defaultValue={item.jan} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="feb" defaultValue={item.feb} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="mar" defaultValue={item.mar} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="apr" defaultValue={item.apr} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="may" defaultValue={item.may} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jun" defaultValue={item.jun} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jul" defaultValue={item.jul} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="aug" defaultValue={item.aug} onBlur={this.handleChangeValues}></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="total" defaultValue={item.total.toFixed(2)} onBlur={this.handleChangeValues}></input></td>
-                    </tr>
-                  )
                 }
+                  
                 })}
                 {
                   this.state.trans.map(item => {
                     return (
                       <tr className='massira'>
                         <td colSpan="2">{item.suivi}</td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="sep" value={item.sep} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="oct" value={item.oct} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="nov" value={item.nov} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="dec" value={item.dec} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jan" value={item.jan} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="feb" value={item.feb} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="mar" value={item.mar} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="apr" value={item.apr} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="may" value={item.may} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jun" value={item.jun} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jul" value={item.jul} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="aug" value={item.aug} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="total" value={item.total.toFixed(2)} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="sep" readOnly value={item.sep} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="oct" readOnly value={item.oct} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="nov" readOnly value={item.nov} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="dec" readOnly value={item.dec} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="jan" readOnly value={item.jan} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="feb" readOnly value={item.feb} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="mar" readOnly value={item.mar} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="apr" readOnly value={item.apr} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="may" readOnly value={item.may} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="jun" readOnly value={item.jun} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="jul" readOnly value={item.jul} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="aug" readOnly value={item.aug} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="total" readOnly value={item.total.toFixed(2)} ></input></td>
                       </tr>
                     )
                   })
@@ -308,19 +377,19 @@ class SuiviBilan extends React.Component  {
                     return (
                       <tr className='massira'>
                         <td>{item.barage}</td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="sep" value={item.sep} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="oct" value={item.oct} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="nov" value={item.nov} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="dec" value={item.dec} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jan" value={item.jan} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="feb" value={item.feb} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="mar" value={item.mar} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="apr" value={item.apr} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="may" value={item.may} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jun" value={item.jun} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="jul" value={item.jul} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="aug" value={item.aug} ></input></td>
-                        <td><input type="number" className="numbers" id={item["id"]} name="total" value={item.total.toFixed(2)} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="sep" readOnly value={item.sep} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="oct" readOnly value={item.oct} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="nov" readOnly value={item.nov} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="dec" readOnly value={item.dec} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="jan" readOnly value={item.jan} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="feb" readOnly value={item.feb} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="mar" readOnly value={item.mar} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="apr" readOnly value={item.apr} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="may" readOnly value={item.may} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="jun" readOnly value={item.jun} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="jul" readOnly value={item.jul} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="aug" readOnly value={item.aug} ></input></td>
+                        <td><input type="number" className="numbers" id={item["id"]} name="total" readOnly value={item.total.toFixed(2)} ></input></td>
                       </tr>
                     )
                   }
